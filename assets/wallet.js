@@ -13,3 +13,21 @@
   window.setBalance = setBalance;
   window.formatEUR = formatEUR;
 })();
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("topupBtn");
+  const balEl = document.getElementById("balance");
+
+  if(!btn || !balEl) return;
+
+  btn.addEventListener("click", () => {
+    const amount = 20; // Demo-Aufladung €20
+    const next = getBalance() + amount;
+    setBalance(next);
+
+    balEl.textContent = formatEUR(next);
+
+    if(typeof window.showToast === "function"){
+      window.showToast(`Guthaben +€${amount.toFixed(2)}`, "ok");
+    }
+  });
+});

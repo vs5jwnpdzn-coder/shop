@@ -623,6 +623,20 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   background: rgba(255,255,255,.04);
   border-color: rgba(255,255,255,.12);
 }
+.walletBtn{
+  width:26px;
+  height:26px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.10);
+  color:#fff;
+  font-weight:1200;
+  cursor:pointer;
+  line-height:1;
+}
+.walletBtn:hover{
+  filter: brightness(1.1);
+}
 </style>
 </head>
 
@@ -695,8 +709,9 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   </div>
 
   <div class="wallet" id="wallet" style="display:none;">
-    💳 <span id="balance">€0.00</span>
-  </div>
+  💳 <span id="balance">€0.00</span>
+  <button class="walletBtn" id="topupBtn" type="button">+</button>
+</div>
 
   <div class="authArea" id="authArea"></div>
 </div>
