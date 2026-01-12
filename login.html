@@ -194,6 +194,8 @@
   </main>
 
   <script>
+    const params = new URLSearchParams(location.search);
+const nextPage = params.get("next") || "index.html";
   const DEMO_EMAIL = "demo@shop.com";
   const DEMO_PASS  = "demo1234";
 
@@ -217,7 +219,7 @@
     if(email.toLowerCase() === DEMO_EMAIL && pass === DEMO_PASS){
       setSession({ email, name: "Demo Customer" });
       showMsg("Login erfolgreich. Weiterleitung…", true);
-      setTimeout(() => location.href = next, 550);
+      setTimeout(() => location.href = nextPage, 550);
     } else {
       showMsg("Login fehlgeschlagen. Prüfe E-Mail/Passwort (Demo).", false);
     }

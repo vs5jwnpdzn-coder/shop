@@ -208,18 +208,15 @@
 
     const checkoutBtn = document.getElementById("checkoutBtn");
 if(checkoutBtn){
-  checkoutBtn.addEventListener("click", () => {
-    const user = getAuth();
-    if(!user){
-      location.href = "login.html?next=cart.html";
-      return;
-    }
+  ccheckoutBtn.addEventListener("click", () => {
+  const user = getAuth();
+  if(!user){
+    location.href = "login.html?next=cart.html";
+    return;
+  }
 
-    // Platzhalter für Hoodpay
-    if(typeof window.showToast === "function"){
-      window.showToast("Checkout startet bald (Hoodpay)", "ok");
-    }
-  });
+  window.showToast("Checkout startet bald (Hoodpay)", "ok");
+});
 }
   }
 

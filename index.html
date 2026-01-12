@@ -690,7 +690,16 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
       </nav>
 
       <div class="navRight">
-        <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span><div class="authArea" id="authArea">
+  <div class="cartMini">
+    🛒 <span class="badge" id="cartCount">0</span>
+  </div>
+
+  <div class="wallet" id="wallet" style="display:none;">
+    💳 <span id="balance">€0.00</span>
+  </div>
+
+  <div class="authArea" id="authArea"></div>
+</div>
   <a class="btn btnPrimary" href="login.html" id="loginBtn">Customer Login</a>
 </div>
     </div>
@@ -940,7 +949,14 @@ renderAuth();
     tick();
   }
 </script>
-<script src="cart.js"></script>
-<script src="auth.js"></script>
+ <!-- Wichtig: PRODUCTS müssen verfügbar sein -->
+  <script src="products-data.js"></script>
+
+  <!-- Badge + Cart Logik -->
+  <script src="assets/cart.js"></script>
+  <script src="assets/wallet.js"></script>
+<script src="assets/auth.js"></script>
+  <!-- Header Auth (Hi/Logout/Login) -->
+  <script src="assets/auth.js"></script>
 </body>
 </html>
