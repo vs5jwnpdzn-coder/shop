@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Products • PremiumShop</title>
+
+<style>
+:root{
+  --bg:#05060a;
+  --bg2:#070a12;
+  --text:#f4f6ff;
+  --muted:rgba(244,246,255,.72);
+
+  --shadow: 0 30px 120px rgba(0,0,0,.72);
+  --shadow2: 0 16px 55px rgba(0,0,0,.52);
+
+  --r14:14px;
+  --r22:22px;
+
+  --max:1180px;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+a{ color:inherit; }
+
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 50% -10%, rgba(233,237,247,.16), rgba(0,0,0,0) 62%),
+    radial-gradient(900px 600px at 12% 80%, rgba(96,165,250,.12), rgba(0,0,0,0) 66%),
+    radial-gradient(900px 600px at 88% 85%, rgba(255,255,255,.06), rgba(0,0,0,0) 68%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+  overflow-x:hidden;
+}
+
+.bgArt{
+  position:fixed; inset:0; z-index:-8;
+  background:
+    radial-gradient(900px 560px at 55% 22%, rgba(233,237,247,.10), rgba(0,0,0,0) 62%),
+    radial-gradient(900px 560px at 35% 78%, rgba(255,255,255,.06), rgba(0,0,0,0) 64%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 35%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+}
+.gridLines{
+  position:fixed; inset:0; z-index:-7;
+  background:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:78px 78px;
+  mask-image: radial-gradient(760px 520px at 50% 22%, black 0%, transparent 75%);
+  opacity:.14;
+  pointer-events:none;
+}
+.vignette{
+  position:fixed; inset:-2px; z-index:-6;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 50% 22%, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%);
+  opacity:.9;
+}
+
+/* bg cards */
+.bankCard{
+  position:fixed;
+  width: 660px; height: 410px;
+  border-radius: 36px;
+  z-index:-5;
+  pointer-events:none;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  overflow:hidden;
+  opacity:.96;
+  filter: saturate(1.05);
+}
+.bankCard::before{
+  content:"";
+  position:absolute; inset:-180px;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.20) 18%, rgba(255,255,255,0) 38%);
+  transform: rotate(12deg);
+  opacity:.55;
+  animation: sweep 6.8s linear infinite;
+}
+@keyframes sweep{
+  0%{ transform: translateX(-38%) rotate(12deg); }
+  100%{ transform: translateX(38%) rotate(12deg); }
+}
+.bankCard::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 460px at 18% 18%, rgba(255,255,255,.12), rgba(255,255,255,0) 58%),
+    radial-gradient(800px 420px at 86% 78%, rgba(96,165,250,.10), rgba(255,255,255,0) 60%);
+  mix-blend-mode: screen;
+  opacity:.9;
+}
+.cardInner{
+  position:absolute; inset:0;
+  padding: 34px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  font-weight:900;
+  letter-spacing:.25px;
+}
+.cardTop{ display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+.issuer b{
+  font-size:14px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  text-shadow: 0 14px 40px rgba(0,0,0,.45);
+}
+.issuer span{
+  display:block; margin-top:6px;
+  font-size:12px; font-weight:800;
+  color: rgba(255,255,255,.72);
+}
+.chip{
+  width:92px; height:66px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,.48), rgba(255,255,255,.14));
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 42px rgba(0,0,0,.42);
+  position:relative;
+}
+.chip:before,.chip:after{
+  content:""; position:absolute; left:12px; right:12px; height:1px;
+  background: rgba(0,0,0,.22); opacity:.42;
+}
+.chip:before{ top:22px; } .chip:after{ top:42px; }
+.cardNumber{
+  font-size: 24px;
+  letter-spacing: 3.4px;
+  color: rgba(255,255,255,.95);
+  text-shadow: 0 18px 55px rgba(0,0,0,.58);
+}
+.cardMeta{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:14px; font-size:12px; font-weight:800;
+  color: rgba(255,255,255,.80);
+}
+.cardMeta b{
+  display:block; margin-top:4px;
+  color: rgba(255,255,255,.94);
+  font-size:13px; letter-spacing:1px;
+  text-transform:uppercase;
+}
+.cardGraphite{
+  left:-90px; top:130px;
+  transform: rotate(-12deg);
+  background:
+    radial-gradient(560px 320px at 20% 20%, rgba(255,255,255,.14), rgba(255,255,255,0) 64%),
+    radial-gradient(520px 320px at 80% 30%, rgba(233,237,247,.08), rgba(0,0,0,0) 66%),
+    linear-gradient(135deg, rgba(255,255,255,.05), rgba(0,0,0,.42));
+}
+.cardSteel{
+  right:-110px; top:250px;
+  transform: rotate(14deg);
+  background:
+    radial-gradient(560px 320px at 75% 25%, rgba(96,165,250,.13), rgba(0,0,0,0) 64%),
+    radial-gradient(560px 320px at 25% 75%, rgba(255,255,255,.10), rgba(0,0,0,0) 64%),
+    linear-gradient(135deg, rgba(22,26,38,.95), rgba(0,0,0,.45));
+}
+
+/* particles */
+canvas#particles{ position:fixed; inset:0; z-index:-4; pointer-events:none; }
+
+.wrap{ width:min(var(--max), 92vw); margin:0 auto; }
+
+/* topbar */
+.topbar{
+  margin-top:16px;
+  padding:12px 16px;
+  border-radius: var(--r14);
+  border:1px solid rgba(255,255,255,.10);
+  background: linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.04), rgba(96,165,250,.08));
+  box-shadow: var(--shadow2);
+  text-align:center;
+  font-weight: 950;
+  letter-spacing:.38px;
+  color: rgba(243,246,255,.94);
+}
+.toplink{
+  color: rgba(243,246,255,.92);
+  text-decoration:none;
+  font-weight:1000;
+  border-bottom: 1px solid rgba(255,255,255,.22);
+  padding-bottom:2px;
+}
+.toplink:hover{ filter:brightness(1.08); }
+
+/* nav */
+header{
+  position:sticky; top:0; z-index:30;
+  backdrop-filter: blur(12px);
+  background: rgba(5,6,10,.62);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.navRow{
+  padding:14px 0;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:14px;
+}
+.brand{ display:flex; align-items:center; gap:12px; min-width:210px; }
+.logo{
+  width:38px; height:38px; border-radius:14px;
+  background:
+    radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.36), rgba(255,255,255,0)),
+    linear-gradient(135deg, rgba(233,237,247,.75), rgba(16,18,26,.85));
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 16px 36px rgba(0,0,0,.50);
+}
+.brandText{ line-height:1.05; }
+.brandText b{ font-size:14px; letter-spacing:.6px; text-transform: uppercase; }
+.brandText small{ display:block; margin-top:4px; color: rgba(243,246,255,.60); font-weight:850; }
+
+.navCenter{ display:flex; align-items:center; justify-content:center; gap:10px; flex:1; flex-wrap:wrap; }
+.pill{
+  padding:10px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  text-decoration:none;
+  font-weight: 950;
+  font-size: 13px;
+  letter-spacing:.25px;
+  transition:.16s ease;
+  box-shadow: 0 14px 34px rgba(0,0,0,.26);
+}
+.pill:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06); }
+.pill.active{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
+
+.navRight{ display:flex; align-items:center; justify-content:flex-end; gap:10px; min-width:250px; }
+.cartMini{ display:flex; align-items:center; gap:8px; font-weight:1000; }
+.badge{
+  min-width:30px; height:30px; border-radius:999px;
+  display:grid; place-items:center;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 12px 30px rgba(0,0,0,.34);
+}
+
+.btn{
+  padding:11px 14px; border-radius:999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  font-weight: 1000;
+  letter-spacing:.22px;
+  cursor:pointer;
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
+  text-decoration:none;
+  box-shadow: 0 16px 40px rgba(0,0,0,.42);
+  position:relative;
+}
+.btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+.btn:active{ transform: translateY(0px) scale(.99); filter: brightness(.98); }
+.btnPrimary{
+  background: linear-gradient(135deg, rgba(233,237,247,.20), rgba(255,255,255,.06), rgba(96,165,250,.12));
+  border-color: rgba(255,255,255,.18);
+}
+.btnPrimary::after{
+  content:""; position:absolute; inset:-2px; border-radius:999px;
+  background: radial-gradient(200px 90px at 30% 20%, rgba(255,255,255,.16), rgba(0,0,0,0) 70%);
+  opacity:.6; pointer-events:none;
+}
+
+/* categories */
+.catBar{
+  margin: 26px 0 22px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.catPill{
+  padding:11px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background: rgba(10,12,18,.85);
+  color: rgba(245,247,255,.95);
+  font-weight:950;
+  font-size:13px;
+  cursor:pointer;
+  box-shadow: 0 12px 36px rgba(0,0,0,.55);
+  transition:.15s ease;
+}
+.catPill:hover{ transform: translateY(-1px); filter: brightness(1.08); }
+.catPill.active{
+  background: linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.08));
+  color:#000;
+  border-color: rgba(255,255,255,.55);
+}
+
+/* product grid */
+.productGrid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:18px;
+  padding: 10px 0 54px;
+}
+.pLink{ text-decoration:none; color:inherit; display:block; }
+.pLink:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:6px; border-radius:22px; }
+
+.pCard{
+  border-radius: var(--r22);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+  box-shadow: var(--shadow2);
+  position:relative;
+  transition: transform .16s ease, border-color .16s ease, filter .16s ease;
+}
+.pCard::before{
+  content:"";
+  position:absolute; inset:-120px;
+  background: linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.10), rgba(255,255,255,0));
+  transform: rotate(12deg) translateX(-30%);
+  opacity:0;
+  transition: opacity .18s ease, transform .25s ease;
+  pointer-events:none;
+}
+.pCard:hover{ transform: translateY(-4px); border-color: rgba(255,255,255,.22); filter: brightness(1.06); }
+.pCard:hover::before{ opacity:.75; transform: rotate(12deg) translateX(25%); }
+
+/* =========================================
+   BILD-BEREICH: 2 MODI (pro Produkt steuerbar)
+   - .pImg.isLogo  => weißer Hintergrund (Logo)
+   - .pImg.isPhoto => dunkler/blur Hintergrund (Foto)
+   ========================================= */
+
+.pImg{
+  height:168px;
+  position:relative;
+  overflow:hidden;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+/* FOTO-MODUS (Standard) */
+.pImg.isPhoto{
+  background:
+    radial-gradient(380px 240px at 20% 25%, rgba(255,255,255,.14), rgba(0,0,0,0) 60%),
+    radial-gradient(380px 240px at 80% 20%, rgba(96,165,250,.12), rgba(0,0,0,0) 62%),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(0,0,0,.26));
+}
+
+/* Blur-Hintergrund fürs Foto */
+.pImg.isPhoto .bg{
+  position:absolute;
+  inset:-12px;
+  width:calc(100% + 24px);
+  height:calc(100% + 24px);
+  object-fit: cover;
+  filter: blur(14px) brightness(.80);
+  transform: scale(1.15);
+  opacity: .9;
+  display:block;
+}
+
+/* Overlay fürs Foto */
+.pImg.isPhoto::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.68));
+  display:block;
+}
+
+/* LOGO-MODUS (weiß) */
+.pImg.isLogo{
+  background:#fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.pImg.isLogo .bg{ display:none !important; }
+.pImg.isLogo::after{ display:none !important; }
+
+/* Vordergrundbild (immer) */
+.pImg .fg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,.35));
+}
+
+/* Extra Luft nur bei Logos */
+.pImg.isLogo .fg{
+  padding:16px;
+  filter:none;
+}
+.addMini{
+  padding:10px 12px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.70);
+  color: rgba(243,246,255,.94);
+  font-weight:1100;
+  cursor:pointer;
+  box-shadow: 0 16px 40px rgba(0,0,0,.32);
+  transition:.15s ease;
+  white-space:nowrap;
+}
+.addMini:hover{ transform: translateY(-1px); filter: brightness(1.08); }
+.badgePopular{
+  position:absolute;
+  top:12px;
+  left:12px;
+  z-index:3;
+
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+
+  padding:7px 11px;
+  border-radius:999px;
+
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(10,12,18,.58);
+  color: rgba(243,246,255,.96);
+
+  font-weight:950;          /* 🔑 weniger klobig */
+  font-size:11.5px;         /* 🔑 minimal kleiner */
+  letter-spacing:.35px;     /* 🔑 edler Look */
+  text-transform: uppercase;/* 🔑 Badge-Style */
+
+  box-shadow: 0 12px 30px rgba(0,0,0,.28);
+  backdrop-filter: blur(10px);
+}
+
+.badgePopular::before{
+  content:"🔥";
+  font-size:11px;
+  opacity:.9;
+}
+/* Badge */
+.badgeType{
+  position:absolute; top:12px; right:12px;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background: rgba(0,0,0,.55);
+  color:#fff;
+  font-weight:1000; font-size:12px;
+  z-index:2;
+}
+
+.pBody{ padding:14px 14px 12px; }
+.pTitle{ margin:0; font-size:16px; font-weight:1100; letter-spacing:.25px; }
+
+.pBottom{
+  padding: 0 14px 16px;
+  display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
+}
+.pPrice{ font-weight:1100; font-size:20px; }
+.pStock{ font-weight:1000; font-size:12px; color: rgba(243,246,255,.72); display:flex; align-items:center; gap:6px; }
+.pStock .tick{ color: rgba(235,238,255,.95); font-weight:1100; }
+.pStock.out{ opacity:.55; }
+
+.empty{
+  grid-column: 1 / -1;
+  border-radius: var(--r22);
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.045);
+  box-shadow: var(--shadow2);
+  padding:16px;
+  text-align:center;
+  color: rgba(243,246,255,.72);
+  font-weight: 950;
+}
+.priceWrap{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+
+.priceOld{
+  font-size:14px;
+  color: rgba(243,246,255,.45);
+  text-decoration: line-through;
+}
+
+.priceSale{
+  font-size:22px;
+  font-weight:1200;
+  color:#ff4d4d;
+  text-shadow:
+    0 0 8px rgba(255,77,77,.55),
+    0 0 16px rgba(255,77,77,.25);
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .bankCard::before{ animation: none !important; }
+}
+
+/* responsive */
+@media (max-width: 980px){
+  .productGrid{ grid-template-columns: repeat(2, 1fr); }
+  .navRight{ min-width: 170px; }
+
+  .bankCard{ width: 520px; height: 330px; opacity:.9; }
+  .cardGraphite{ left:-120px; top:160px; }
+  .cardSteel{ right:-120px; top:320px; }
+}
+@media (max-width: 640px){
+  .navCenter{ display:none; }
+  .productGrid{ grid-template-columns: 1fr; }
+
+  .bankCard{ width: 420px; height: 270px; opacity:.55; filter: blur(.2px); }
+  .cardGraphite{ left:-220px; top:140px; }
+  .cardSteel{ right:-220px; top:340px; }
+}
+.authArea{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.hello{
+  font-weight:1000;
+  color: rgba(243,246,255,.92);
+  letter-spacing:.2px;
+  white-space:nowrap;
+}
+
+.btnGhost{
+  background: rgba(255,255,255,.04);
+  border-color: rgba(255,255,255,.12);
+}
+</style>
+</head>
+
+<body>
+  <div class="bgArt" aria-hidden="true"></div>
+  <div class="gridLines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="bankCard cardGraphite" aria-hidden="true">
+    <div class="cardInner">
+      <div class="cardTop">
+        <div class="issuer"><b>Premium Card</b><span>Secure • Verified</span></div>
+        <div class="chip" aria-hidden="true"></div>
+      </div>
+      <div>
+        <div class="cardNumber">4921  ••••  ••••  8842</div>
+        <div class="cardMeta">
+          <div><span>Cardholder</span><b>MAX MUSTERMANN</b></div>
+          <div style="text-align:right"><span>Valid thru</span><b>08/30</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bankCard cardSteel" aria-hidden="true">
+    <div class="cardInner">
+      <div class="cardTop">
+        <div class="issuer"><b>Platinum Card</b><span>Fast • Support 24/7</span></div>
+        <div class="chip" aria-hidden="true"></div>
+      </div>
+      <div>
+        <div class="cardNumber">5314  ••••  ••••  1096</div>
+        <div class="cardMeta">
+          <div><span>Cardholder</span><b>YOUR CUSTOMER</b></div>
+          <div style="text-align:right"><span>Valid thru</span><b>11/29</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="particles"></canvas>
+
+  <div class="wrap">
+    <div class="topbar">
+      SECURE CHECKOUT • 24/7 SUPPORT •
+      <a class="toplink" href="#" onclick="return false;">support@example.com</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap navRow">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brandText">
+          <b>PremiumShop</b>
+          <small>Store • Membership • Service</small>
+        </div>
+      </div>
+
+      <nav class="navCenter" aria-label="Navigation">
+        <a class="pill" href="index.html#home">Home</a>
+        <a class="pill active" href="products.html">Products</a>
+        <a class="pill" href="index.html#reviews">Reviews</a>
+        <a class="pill" href="index.html#contact">Contact</a>
+      </nav>
+
+      <div class="navRight">
+  <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span></div>
+
+  <div class="authArea" id="authArea">
+    <a class="btn btnPrimary" href="login.html" id="loginBtn">Customer Login</a>
+  </div>
+</div>
+  </header>
+
+  <main class="wrap">
+    <div class="catBar" id="catBar" aria-label="Kategorien"></div>
+    <section class="productGrid" id="productGrid" aria-label="Produktliste"></section>
+  </main>
+<script src="products-data.js"></script>
+<script>
+  const CATEGORIES = [
+    {id:"all",label:"All"},
+    {id:"paypal",label:"PAYPAL"},
+    {id:"cc",label:"CREDIT CARD"},
+    {id:"euro",label:"EURO"},
+    {id:"amazon",label:"AMAZON"},
+    {id:"bank",label:"BANK ACCOUNT"},
+    {id:"phishing",label:"PHISHING SITE"},
+    {id:"id",label:"ID CARD"},
+    {id:"mentorship",label:"MENTORSHIP"},
+  ];
+
+
+  let activeCat = "all";
+  const catBar = document.getElementById("catBar");
+  const grid = document.getElementById("productGrid");
+
+  function renderCats(){
+    catBar.innerHTML = "";
+    for(const c of CATEGORIES){
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "catPill" + (c.id === activeCat ? " active" : "");
+      b.textContent = c.label;
+      b.addEventListener("click", () => {
+        activeCat = c.id;
+        document.querySelectorAll(".catPill").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        renderProducts();
+      });
+      catBar.appendChild(b);
+    }
+  }
+
+  function cardHTML(p){
+  const stockClass = p.stock ? "" : "out";
+  const stockText  = p.stock ? 'IN STOCK <span class="tick">✓</span>' : 'OUT OF STOCK';
+  const imgSrc = p.img || "images/placeholder.jpg";
+
+  // Bildmodus
+  const modeClass = (p.imgMode === "logo") ? "isLogo" : "isPhoto";
+
+  return `
+    <a class="pLink" href="product.html?id=${encodeURIComponent(p.id)}" aria-label="${p.name} öffnen">
+      <article class="pCard">
+
+        <div class="pImg ${modeClass}">
+          ${modeClass === "isPhoto" ? `<img class="bg" src="${imgSrc}" alt="">` : ``}
+          <img class="fg" src="${imgSrc}" alt="${p.name}">
+
+          ${p.popular ? `<div class="badgePopular">POPULAR</div>` : ``}
+          ${p.tag ? `<div class="badgeType">${p.tag}</div>` : ``}
+        </div>
+
+        <div class="pBody">
+          <h3 class="pTitle">${p.name}</h3>
+        </div>
+
+        <div class="pBottom">
+  <div class="pPrice">
+    ${p.salePrice
+      ? `<div class="priceWrap">
+           <span class="priceOld">${p.price}</span>
+           <span class="priceSale">${p.salePrice}</span>
+         </div>`
+      : `<span>${p.price}</span>`
+    }
+  </div>
+
+  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+    <div class="pStock ${stockClass}">${stockText}</div>
+    <button
+      class="addMini"
+      type="button"
+      data-add="${p.id}"
+    >
+      Add
+    </button>
+  </div>
+</div>
+
+      </article>
+    </a>
+  `;
+}
+  function renderProducts(){
+    const list = window.PRODUCTS.filter(p => activeCat === "all" || p.cat === activeCat);
+    grid.innerHTML = "";
+    if(list.length === 0){
+      grid.innerHTML = `<div class="empty">Keine Produkte in dieser Kategorie (noch).</div>`;
+      return;
+    }
+    grid.innerHTML = list.map(cardHTML).join("");
+  }
+
+  renderCats();
+  renderProducts();
+  grid.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-add]");
+  if(!btn) return;
+
+  e.preventDefault(); // verhindert Link-Klick
+  e.stopPropagation();
+
+  const id = Number(btn.getAttribute("data-add"));
+  if(!id) return;
+
+  // cart add 1
+  let items = [];
+  try { items = JSON.parse(localStorage.getItem("cart") || "[]"); } catch {}
+  const idx = items.findIndex(x => Number(x.id) === id);
+  if(idx >= 0) items[idx].qty = (Number(items[idx].qty || 0) + 1);
+  else items.push({ id, qty: 1 });
+
+  localStorage.setItem("cart", JSON.stringify(items));
+  if(typeof window.updateBadge === "function") window.updateBadge();
+});
+function getCart(){
+  try { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+  catch { return []; }
+}
+function updateBadge(){
+  const el = document.getElementById("cartCount");
+  if(!el) return;
+  const items = getCart();
+  const count = items.reduce((sum, it) => sum + (it.qty || 0), 0);
+  el.textContent = String(count);
+}
+updateBadge();
+function getAuth(){
+  try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
+  catch { return null; }
+}
+
+function logout(){
+  sessionStorage.removeItem("auth");
+  location.reload();
+}
+
+function renderAuth(){
+  const authArea = document.getElementById("authArea");
+  if(!authArea) return;
+
+  const user = getAuth();
+  if(!user){
+    authArea.innerHTML = `<a class="btn btnPrimary" href="login.html">Customer Login</a>`;
+    return;
+  }
+
+  const name = (user.name || user.email || "Customer").toString();
+  authArea.innerHTML = `
+    <span class="hello">Hi, ${name}</span>
+    <button class="btn btnGhost" type="button" id="logoutBtn">Logout</button>
+  `;
+  document.getElementById("logoutBtn").addEventListener("click", logout);
+}
+renderAuth();
+  // particles
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+  let W=0, H=0, DPR=1, parts=[];
+
+  function resize(){
+    DPR = window.devicePixelRatio || 1;
+    W = canvas.width = Math.floor(window.innerWidth * DPR);
+    H = canvas.height = Math.floor(window.innerHeight * DPR);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
+    parts = Array.from({length: count}, () => ({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: (Math.random()*2.0 + 0.7) * DPR,
+      s: (Math.random()*0.18 + 0.06) * DPR,
+      a: Math.random()*0.55 + 0.16
+    }));
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    ctx.shadowBlur = 12 * DPR;
+    ctx.shadowColor = "rgba(255,255,255,.10)";
+
+    for(const p of parts){
+      p.y += p.s;
+      if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+
+      const t = Math.random();
+      if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
+      else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
+
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (reduceMotion) {
+    canvas.style.display = "none";
+  } else {
+    window.addEventListener("resize", resize);
+    resize();
+    tick();
+  }
+  // id:"all",label:"All"},
+ //   {id:"paypal",label:"PAYPAL"},
+ //   {id:"cc",label:"CREDIT CARD"},
+ //   {id:"euro",label:"EURO"},
+ //   {id:"amazon",label:"AMAZON"},
+ //   {id:"bank",label:"BANK ACCOUNT"},
+ //   {id:"phishing",label:"PHISHING SITE"},
+ //   {id:"id",label:"ID CARD"},
+ //   {id:"mentorship",label:"MENTORSHIP"},
+</script>
+<script src="products-data.js"></script>
+<script src="cart.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

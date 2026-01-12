@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Premium Shop</title>
+
+<style>
+:root{
+  --bg:#05060a;
+  --bg2:#070a12;
+  --text:#f4f6ff;
+  --muted:rgba(244,246,255,.72);
+
+  --shadow: 0 30px 120px rgba(0,0,0,.72);
+  --shadow2: 0 16px 55px rgba(0,0,0,.52);
+
+  --r14:14px;
+  --r22:22px;
+
+  --max:1180px;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+a{ color:inherit; }
+
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 50% -10%, rgba(233,237,247,.16), rgba(0,0,0,0) 62%),
+    radial-gradient(900px 600px at 12% 80%, rgba(96,165,250,.12), rgba(0,0,0,0) 66%),
+    radial-gradient(900px 600px at 88% 85%, rgba(255,255,255,.06), rgba(0,0,0,0) 68%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+  overflow-x:hidden;
+}
+
+.bgArt{
+  position:fixed; inset:0; z-index:-8;
+  background:
+    radial-gradient(900px 560px at 55% 22%, rgba(233,237,247,.10), rgba(0,0,0,0) 62%),
+    radial-gradient(900px 560px at 35% 78%, rgba(255,255,255,.06), rgba(0,0,0,0) 64%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 35%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+}
+.gridLines{
+  position:fixed; inset:0; z-index:-7;
+  background:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:78px 78px;
+  mask-image: radial-gradient(760px 520px at 50% 22%, black 0%, transparent 75%);
+  opacity:.14;
+  pointer-events:none;
+}
+.vignette{
+  position:fixed; inset:-2px; z-index:-6;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 50% 22%, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%);
+  opacity:.9;
+}
+
+/* bg cards */
+.bankCard{
+  position:fixed;
+  width: 660px; height: 410px;
+  border-radius: 36px;
+  z-index:-5;
+  pointer-events:none;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  overflow:hidden;
+  opacity:.96;
+  filter: saturate(1.05);
+}
+.bankCard::before{
+  content:"";
+  position:absolute; inset:-180px;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.20) 18%, rgba(255,255,255,0) 38%);
+  transform: rotate(12deg);
+  opacity:.55;
+  animation: sweep 6.8s linear infinite;
+}
+@keyframes sweep{
+  0%{ transform: translateX(-38%) rotate(12deg); }
+  100%{ transform: translateX(38%) rotate(12deg); }
+}
+.bankCard::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 460px at 18% 18%, rgba(255,255,255,.12), rgba(255,255,255,0) 58%),
+    radial-gradient(800px 420px at 86% 78%, rgba(96,165,250,.10), rgba(255,255,255,0) 60%);
+  mix-blend-mode: screen;
+  opacity:.9;
+}
+.cardInner{
+  position:absolute; inset:0;
+  padding: 34px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  font-weight:900;
+  letter-spacing:.25px;
+}
+.cardTop{ display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+.issuer b{
+  font-size:14px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  text-shadow: 0 14px 40px rgba(0,0,0,.45);
+}
+.issuer span{
+  display:block; margin-top:6px;
+  font-size:12px; font-weight:800;
+  color: rgba(255,255,255,.72);
+}
+.chip{
+  width:92px; height:66px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,.48), rgba(255,255,255,.14));
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 42px rgba(0,0,0,.42);
+  position:relative;
+}
+.chip:before,.chip:after{
+  content:""; position:absolute; left:12px; right:12px; height:1px;
+  background: rgba(0,0,0,.22); opacity:.42;
+}
+.chip:before{ top:22px; } .chip:after{ top:42px; }
+.cardNumber{
+  font-size: 24px;
+  letter-spacing: 3.4px;
+  color: rgba(255,255,255,.95);
+  text-shadow: 0 18px 55px rgba(0,0,0,.58);
+}
+.cardMeta{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:14px; font-size:12px; font-weight:800;
+  color: rgba(255,255,255,.80);
+}
+.cardMeta b{
+  display:block; margin-top:4px;
+  color: rgba(255,255,255,.94);
+  font-size:13px; letter-spacing:1px;
+  text-transform:uppercase;
+}
+.cardGraphite{
+  left:-90px; top:130px;
+  transform: rotate(-12deg);
+  background:
+    radial-gradient(560px 320px at 20% 20%, rgba(255,255,255,.14), rgba(255,255,255,0) 64%),
+    radial-gradient(520px 320px at 80% 30%, rgba(233,237,247,.08), rgba(0,0,0,0) 66%),
+    linear-gradient(135deg, rgba(255,255,255,.05), rgba(0,0,0,.42));
+}
+.cardSteel{
+  right:-110px; top:250px;
+  transform: rotate(14deg);
+  background:
+    radial-gradient(560px 320px at 75% 25%, rgba(96,165,250,.13), rgba(0,0,0,0) 64%),
+    radial-gradient(560px 320px at 25% 75%, rgba(255,255,255,.10), rgba(0,0,0,0) 64%),
+    linear-gradient(135deg, rgba(22,26,38,.95), rgba(0,0,0,.45));
+}
+
+/* particles */
+canvas#particles{ position:fixed; inset:0; z-index:-4; pointer-events:none; }
+
+.wrap{ width:min(var(--max), 92vw); margin:0 auto; }
+
+/* topbar */
+.topbar{
+  margin-top:16px;
+  padding:12px 16px;
+  border-radius: var(--r14);
+  border:1px solid rgba(255,255,255,.10);
+  background: linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.04), rgba(96,165,250,.08));
+  box-shadow: var(--shadow2);
+  text-align:center;
+  font-weight: 950;
+  letter-spacing:.38px;
+  color: rgba(243,246,255,.94);
+}
+.toplink{
+  color: rgba(243,246,255,.92);
+  text-decoration:none;
+  font-weight:1000;
+  border-bottom: 1px solid rgba(255,255,255,.22);
+  padding-bottom:2px;
+}
+.toplink:hover{ filter:brightness(1.08); }
+
+/* nav */
+header{
+  position:sticky; top:0; z-index:30;
+  backdrop-filter: blur(12px);
+  background: rgba(5,6,10,.62);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.navRow{
+  padding:14px 0;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:14px;
+}
+.brand{ display:flex; align-items:center; gap:12px; min-width:210px; }
+.logo{
+  width:38px; height:38px; border-radius:14px;
+  background:
+    radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.36), rgba(255,255,255,0)),
+    linear-gradient(135deg, rgba(233,237,247,.75), rgba(16,18,26,.85));
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 16px 36px rgba(0,0,0,.50);
+}
+.brandText{ line-height:1.05; }
+.brandText b{ font-size:14px; letter-spacing:.6px; text-transform: uppercase; }
+.brandText small{ display:block; margin-top:4px; color: rgba(243,246,255,.60); font-weight:850; }
+
+.navCenter{ display:flex; align-items:center; justify-content:center; gap:10px; flex:1; flex-wrap:wrap; }
+.pill{
+  padding:10px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  text-decoration:none;
+  font-weight: 950;
+  font-size: 13px;
+  letter-spacing:.25px;
+  transition:.16s ease;
+  box-shadow: 0 14px 34px rgba(0,0,0,.26);
+}
+.pill:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06); }
+.pill.active{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
+
+.navRight{ display:flex; align-items:center; justify-content:flex-end; gap:10px; min-width:250px; }
+.cartMini{ display:flex; align-items:center; gap:8px; font-weight:1000; }
+.badge{
+  min-width:30px; height:30px; border-radius:999px;
+  display:grid; place-items:center;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 12px 30px rgba(0,0,0,.34);
+}
+
+.btn{
+  padding:11px 14px; border-radius:999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  font-weight: 1000;
+  letter-spacing:.22px;
+  cursor:pointer;
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
+  text-decoration:none;
+  box-shadow: 0 16px 40px rgba(0,0,0,.42);
+  position:relative;
+}
+.btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+.btn:active{ transform: translateY(0px) scale(.99); filter: brightness(.98); }
+.btnPrimary{
+  background: linear-gradient(135deg, rgba(233,237,247,.20), rgba(255,255,255,.06), rgba(96,165,250,.12));
+  border-color: rgba(255,255,255,.18);
+}
+.btnPrimary::after{
+  content:""; position:absolute; inset:-2px; border-radius:999px;
+  background: radial-gradient(200px 90px at 30% 20%, rgba(255,255,255,.16), rgba(0,0,0,0) 70%);
+  opacity:.6; pointer-events:none;
+}
+
+/* hero */
+.hero{ padding:72px 0 34px; text-align:center; }
+.hero h1{
+  margin:0;
+  font-size: clamp(40px, 5.8vw, 80px);
+  line-height:.98;
+  letter-spacing:1.6px;
+  text-transform: uppercase;
+  text-shadow: 0 30px 110px rgba(0,0,0,.80);
+}
+.hero .accent{
+  background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(233,237,247,.88), rgba(96,165,250,.58));
+  -webkit-background-clip:text; background-clip:text;
+  color: transparent;
+  filter: drop-shadow(0 26px 36px rgba(96,165,250,.10));
+}
+.hero p{
+  margin:14px auto 0;
+  max-width:920px;
+  color: var(--muted);
+  font-weight:820;
+  font-size:15px;
+  line-height:1.6;
+  text-shadow: 0 10px 40px rgba(0,0,0,.55);
+}
+
+/* promo + rating */
+.promo{
+  margin-top:18px;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  box-shadow: var(--shadow2);
+  font-weight:1000;
+  letter-spacing:.25px;
+}
+.dot{
+  width:12px; height:12px; border-radius:999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(96,165,250,.28));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow: 0 0 18px rgba(255,255,255,.12);
+}
+.rating{ margin-top:34px; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.rating .score{ font-size:46px; font-weight:1100; letter-spacing:.4px; }
+.rating small{ color: rgba(243,246,255,.62); font-weight:900; letter-spacing:.25px; }
+
+/* sections */
+.sectionTitle{
+  margin:52px 0 22px;
+  text-align:center;
+  font-size: clamp(28px, 3.9vw, 48px);
+  font-weight:1100;
+  letter-spacing:.7px;
+  text-transform: uppercase;
+  text-shadow: 0 22px 70px rgba(0,0,0,.62);
+}
+
+/* products */
+.productGrid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:18px;
+  padding: 10px 0 18px;
+}
+.pLink{ text-decoration:none; color:inherit; display:block; }
+.pLink:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:6px; border-radius:22px; }
+
+.pCard{
+  border-radius: var(--r22);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+  box-shadow: var(--shadow2);
+  position:relative;
+  transition: transform .16s ease, border-color .16s ease, filter .16s ease;
+}
+.pCard::before{
+  content:"";
+  position:absolute; inset:-120px;
+  background: linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.10), rgba(255,255,255,0));
+  transform: rotate(12deg) translateX(-30%);
+  opacity:0;
+  transition: opacity .18s ease, transform .25s ease;
+  pointer-events:none;
+}
+.pCard:hover{ transform: translateY(-4px); border-color: rgba(255,255,255,.22); filter: brightness(1.06); }
+.pCard:hover::before{ opacity:.75; transform: rotate(12deg) translateX(25%); }
+
+/* Bildbereich: Logo/Photo wie products.html */
+.pImg{
+  height:168px;
+  position:relative;
+  overflow:hidden;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.pImg.isPhoto{
+  background:
+    radial-gradient(380px 240px at 20% 25%, rgba(255,255,255,.14), rgba(0,0,0,0) 60%),
+    radial-gradient(380px 240px at 80% 20%, rgba(96,165,250,.12), rgba(0,0,0,0) 62%),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(0,0,0,.26));
+}
+.pImg.isPhoto .bg{
+  position:absolute;
+  inset:-12px;
+  width:calc(100% + 24px);
+  height:calc(100% + 24px);
+  object-fit: cover;
+  filter: blur(14px) brightness(.80);
+  transform: scale(1.15);
+  opacity: .9;
+  display:block;
+}
+.pImg.isPhoto::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.68));
+  display:block;
+}
+.pImg.isLogo{
+  background:#fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.pImg.isLogo .bg{ display:none !important; }
+.pImg.isLogo::after{ display:none !important; }
+
+.pImg .fg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,.35));
+}
+.pImg.isLogo .fg{
+  padding:16px;
+  filter:none;
+}
+
+.badgeStar,.badgeType{
+  position:absolute; top:12px;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(10,12,18,.58);
+  color: rgba(243,246,255,.94);
+  font-weight:1000; font-size:12.5px;
+  z-index:2;
+}
+.badgeStar{ left:12px; }
+.badgeType{ right:12px; background: rgba(255,255,255,.07); }
+
+.pBody{ padding:14px 14px 12px; }
+.pTitle{ margin:0; font-size:16px; font-weight:1100; letter-spacing:.25px; }
+.pDesc{ margin:8px 0 0; color: rgba(243,246,255,.68); font-size:13px; line-height:1.5; min-height:40px; }
+
+.pBottom{
+  padding: 0 14px 16px;
+  display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
+}
+.pPrice{ font-weight:1100; font-size:20px; }
+.pStock{ font-weight:1000; font-size:12px; color: rgba(243,246,255,.72); display:flex; align-items:center; gap:6px; }
+.pStock .tick{ color: rgba(235,238,255,.95); font-weight:1100; }
+
+.centerRow{ display:flex; justify-content:center; padding: 12px 0 42px; }
+.viewAll{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding: 12px 16px; border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(10,12,18,.58);
+  font-weight:1100;
+  text-decoration:none;
+  box-shadow: var(--shadow2);
+  transition:.15s ease;
+}
+.viewAll:hover{ filter:brightness(1.06); transform: translateY(-1px); }
+
+.empty{
+  grid-column: 1 / -1;
+  border-radius: var(--r22);
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.045);
+  box-shadow: var(--shadow2);
+  padding:16px;
+  text-align:center;
+  color: rgba(243,246,255,.72);
+  font-weight: 950;
+}
+
+/* SALE price look */
+.priceWrap{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+.priceOld{
+  font-size:14px;
+  color: rgba(243,246,255,.45);
+  text-decoration: line-through;
+}
+.priceSale{
+  font-size:22px;
+  font-weight:1200;
+  color:#ff4d4d;
+  text-shadow:
+    0 0 8px rgba(255,77,77,.55),
+    0 0 16px rgba(255,77,77,.25);
+}
+
+/* reviews */
+.reviewsWrap{ padding: 0 0 40px; }
+.reviewGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
+.reviewCard{
+  border-radius: var(--r22);
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+  box-shadow: var(--shadow2);
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.reviewCard::before{
+  content:"";
+  position:absolute; inset:-120px;
+  background: radial-gradient(260px 120px at 25% 20%, rgba(255,255,255,.10), rgba(0,0,0,0) 70%);
+  opacity:.9; pointer-events:none;
+}
+.reviewTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; position:relative; }
+.reviewName{ font-weight:1100; letter-spacing:.2px; }
+.reviewStars{ font-weight:1100; opacity:.95; }
+.reviewText{ margin:10px 0 0; color: rgba(243,246,255,.70); font-weight:850; line-height:1.55; position:relative; }
+.reviewMeta{ margin-top:12px; display:flex; justify-content:space-between; color: rgba(243,246,255,.55); font-weight:900; font-size:12px; position:relative; }
+
+/* support */
+.supportWrap{ padding: 10px 0 22px; }
+.supportCard{
+  width:min(980px, 92vw);
+  margin: 0 auto;
+  padding: 38px 24px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.06), rgba(96,165,250,.10));
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: var(--shadow);
+  text-align:center;
+  color: #0b0f19;
+  position:relative;
+  overflow:hidden;
+}
+.supportCard::before{
+  content:"";
+  position:absolute; inset:-80px;
+  background: radial-gradient(620px 300px at 30% 20%, rgba(255,255,255,.28), rgba(255,255,255,0) 62%);
+  transform: rotate(-10deg);
+  pointer-events:none;
+}
+.supportCard h2{
+  margin:0;
+  font-size: clamp(30px, 4.2vw, 48px);
+  font-weight: 1000;
+  letter-spacing:.3px;
+  position:relative;
+}
+.supportCard p{
+  margin: 10px auto 18px;
+  max-width: 760px;
+  color: rgba(0,0,0,.76);
+  font-weight: 900;
+  line-height: 1.55;
+  position:relative;
+}
+.supportBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.86);
+  color: rgba(255,255,255,.94);
+  text-decoration:none;
+  font-weight: 1100;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 56px rgba(0,0,0,.48);
+  position:relative;
+  transition:.15s ease;
+}
+.supportBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+
+/* footer */
+footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgba(255,255,255,.10); }
+.footerGrid{
+  display:grid;
+  grid-template-columns: 1.2fr .6fr .6fr;
+  gap: 18px;
+  padding: 26px 0 22px;
+}
+.footerBrand{ display:flex; gap: 12px; align-items:flex-start; }
+.footerName{ font-weight: 1100; letter-spacing:.3px; }
+.footerTag{ margin-top:8px; color: rgba(243,246,255,.56); font-weight: 900; font-size:12px; letter-spacing:.25px; }
+.footerCol{ display:flex; flex-direction:column; gap:10px; }
+.footerTitle{ font-weight:1100; color: rgba(243,246,255,.86); letter-spacing:.5px; margin-bottom:6px; text-transform:uppercase; font-size:12px; }
+.footerCol a{ color: rgba(243,246,255,.64); text-decoration:none; font-weight: 900; font-size:13px; width:max-content; }
+.footerCol a:hover{ color: rgba(243,246,255,.94); }
+.footerBottom{
+  display:flex; justify-content:space-between; gap:14px;
+  padding: 14px 0 18px;
+  color: rgba(243,246,255,.56);
+  font-weight: 900;
+  font-size: 13px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.powered span{ color: rgba(243,246,255,.90); font-weight: 1100; }
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .bankCard::before{ animation: none !important; }
+}
+
+/* responsive */
+@media (max-width: 980px){
+  .productGrid{ grid-template-columns: repeat(2, 1fr); }
+  .reviewGrid{ grid-template-columns: repeat(2, 1fr); }
+  .navRight{ min-width: 170px; }
+
+  .bankCard{ width: 520px; height: 330px; opacity:.9; }
+  .cardGraphite{ left:-120px; top:160px; }
+  .cardSteel{ right:-120px; top:320px; }
+}
+@media (max-width: 640px){
+  .navCenter{ display:none; }
+  .productGrid{ grid-template-columns: 1fr; }
+  .reviewGrid{ grid-template-columns: 1fr; }
+  .footerGrid{ grid-template-columns: 1fr; }
+  .footerBottom{ flex-direction:column; }
+
+  .bankCard{ width: 420px; height: 270px; opacity:.55; filter: blur(.2px); }
+  .cardGraphite{ left:-220px; top:140px; }
+  .cardSteel{ right:-220px; top:340px; }
+}
+.authArea{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.hello{
+  font-weight:1000;
+  color: rgba(243,246,255,.92);
+  letter-spacing:.2px;
+  white-space:nowrap;
+}
+
+.btnGhost{
+  background: rgba(255,255,255,.04);
+  border-color: rgba(255,255,255,.12);
+}
+</style>
+</head>
+
+<body>
+  <div class="bgArt" aria-hidden="true"></div>
+  <div class="gridLines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="bankCard cardGraphite" aria-hidden="true">
+    <div class="cardInner">
+      <div class="cardTop">
+        <div class="issuer"><b>Premium Card</b><span>Secure • Verified</span></div>
+        <div class="chip" aria-hidden="true"></div>
+      </div>
+      <div>
+        <div class="cardNumber">4921  ••••  ••••  8842</div>
+        <div class="cardMeta">
+          <div><span>Cardholder</span><b>MAX MUSTERMANN</b></div>
+          <div style="text-align:right"><span>Valid thru</span><b>08/30</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bankCard cardSteel" aria-hidden="true">
+    <div class="cardInner">
+      <div class="cardTop">
+        <div class="issuer"><b>Platinum Card</b><span>Fast • Support 24/7</span></div>
+        <div class="chip" aria-hidden="true"></div>
+      </div>
+      <div>
+        <div class="cardNumber">5314  ••••  ••••  1096</div>
+        <div class="cardMeta">
+          <div><span>Cardholder</span><b>YOUR CUSTOMER</b></div>
+          <div style="text-align:right"><span>Valid thru</span><b>11/29</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="particles"></canvas>
+
+  <div class="wrap">
+    <div class="topbar">
+      SECURE CHECKOUT • 24/7 SUPPORT •
+      <a class="toplink" href="https://t.me/MoneyMaker966" target="_blank" rel="noopener">t.me/MoneyMaker966</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap navRow">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brandText">
+          <b>PremiumShop</b>
+          <small>Store • Membership • Service</small>
+        </div>
+      </div>
+
+      <nav class="navCenter" aria-label="Navigation">
+        <a class="pill active" href="#home">Home</a>
+        <a class="pill" href="products.html">Products</a>
+        <a class="pill" href="#reviews">Reviews</a>
+        <a class="pill" href="#contact">Contact</a>
+      </nav>
+
+      <div class="navRight">
+        <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span><div class="authArea" id="authArea">
+  <a class="btn btnPrimary" href="login.html" id="loginBtn">Customer Login</a>
+</div>
+    </div>
+  </header>
+
+  <main class="wrap" id="home">
+    <section class="hero">
+      <h1><span class="accent">UNDERGROUND</span> PREMIUM SHOP</h1>
+      <p>Startseite zeigt nur Bestseller. Alle Produkte findest du unter „Products“.</p>
+
+      <div class="promo">
+        <span class="dot"></span>
+        <span>USE CODE: <b style="color:#fff">SAVE10</b></span>
+        <span class="dot"></span>
+        <span><b style="color:#fff">10% OFF</b></span>
+      </div>
+
+      <div class="rating">
+        <div class="score">4.98 ★</div>
+        <small>Trusted</small>
+      </div>
+    </section>
+
+    <h2 class="sectionTitle" id="products">Bestseller</h2>
+
+    <!-- ✅ Dynamisch (3 ausgewählte Produkte) -->
+    <section class="productGrid" id="bestsellerGrid" aria-label="Bestseller Produkte"></section>
+
+    <div class="centerRow">
+      <a class="viewAll" href="products.html">View all products →</a>
+    </div>
+
+    <h2 class="sectionTitle" id="reviews">Reviews</h2>
+
+    <section class="reviewsWrap" aria-label="Reviews">
+      <div class="reviewGrid">
+        <article class="reviewCard">
+          <div class="reviewTop"><div class="reviewName">Alex</div><div class="reviewStars">★★★★★</div></div>
+          <p class="reviewText">Schnell, clean und wirkt richtig premium.</p>
+          <div class="reviewMeta"><span>Verified</span><span>1 day ago</span></div>
+        </article>
+        <article class="reviewCard">
+          <div class="reviewTop"><div class="reviewName">Mert</div><div class="reviewStars">★★★★★</div></div>
+          <p class="reviewText">Design ist stark und nicht übertrieben.</p>
+          <div class="reviewMeta"><span>Verified</span><span>3 days ago</span></div>
+        </article>
+        <article class="reviewCard">
+          <div class="reviewTop"><div class="reviewName">Lena</div><div class="reviewStars">★★★★★</div></div>
+          <p class="reviewText">Checkout fühlt sich sicher an.</p>
+          <div class="reviewMeta"><span>Verified</span><span>1 week ago</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="supportWrap" id="contact">
+      <div class="supportCard">
+        <h2>We’re here to help</h2>
+        <p>If you’re in need of support, contact us by tapping the button below.</p>
+        <a class="supportBtn" href="#" onclick="alert('Kontakt-Link später einfügen'); return false;">Contact support</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footerGrid">
+      <div class="footerBrand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="footerName">PremiumShop</div>
+          <div class="footerTag">HARD • CLEAN • GRAPHITE</div>
+        </div>
+      </div>
+
+      <div class="footerCol">
+        <div class="footerTitle">TABS</div>
+        <a href="#home">Home</a>
+        <a href="products.html">Products</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#contact">Contact</a>
+        <a href="#" onclick="alert('Terms-Seite später'); return false;">Terms</a>
+      </div>
+
+      <div class="footerCol">
+        <div class="footerTitle">SOCIAL</div>
+        <a href="#" onclick="alert('Social-Link später'); return false;">Telegram</a>
+      </div>
+    </div>
+
+    <div class="wrap footerBottom">
+      <div>PremiumShop © <span id="year"></span></div>
+      <div class="powered">Powered by <span>yourplatform</span></div>
+    </div>
+  </footer>
+
+<!-- ✅ Produktdaten für Bestseller -->
+<script src="products-data.js"></script>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // ===== cart badge (shared) =====
+  function getCart(){
+    try { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+    catch { return []; }
+  }
+  function updateBadge(){
+    const items = getCart();
+    const count = items.reduce((sum, it) => sum + (it.qty || 0), 0);
+    document.getElementById("cartCount").textContent = String(count);
+  }
+  updateBadge();
+  window.addEventListener("storage", (e) => { if(e.key === "cart") updateBadge(); });
+  function getAuth(){
+  try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
+  catch { return null; }
+}
+
+function logout(){
+  sessionStorage.removeItem("auth");
+  // optional: auch cart löschen? (normalerweise НЕIN)
+  // localStorage.removeItem("cart");
+  location.reload();
+}
+
+function renderAuth(){
+  const authArea = document.getElementById("authArea");
+  if(!authArea) return;
+
+  const user = getAuth();
+
+  if(!user){
+    authArea.innerHTML = `<a class="btn btnPrimary" href="login.html">Customer Login</a>`;
+    return;
+  }
+
+  const name = (user.name || user.email || "Customer").toString();
+  authArea.innerHTML = `
+    <span class="hello">Hi, ${name}</span>
+    <button class="btn btnGhost" type="button" id="logoutBtn">Logout</button>
+  `;
+  document.getElementById("logoutBtn").addEventListener("click", logout);
+}
+
+renderAuth();
+
+  // ===== Bestseller auf Startseite (3 ausgewählte IDs) =====
+  const BESTSELLER_IDS = [1, 14, 87]; // <-- HIER deine 3 Artikel-IDs einsetzen
+
+  function bestsellerCardHTML(p){
+    const inStock = !!p.stock;
+    const stockText  = inStock ? 'IN STOCK <span class="tick">✓</span>' : 'OUT OF STOCK';
+    const modeClass = (p.imgMode === "logo") ? "isLogo" : "isPhoto";
+    const imgSrc = p.img || "images/placeholder.jpg";
+
+    const priceHTML = p.salePrice
+      ? `<div class="priceWrap">
+           <span class="priceOld">${p.price}</span>
+           <span class="priceSale">${p.salePrice}</span>
+         </div>`
+      : `${p.price || "—"}`;
+
+    return `
+      <a class="pLink" href="product.html?id=${encodeURIComponent(p.id)}" aria-label="${p.name} öffnen">
+        <article class="pCard">
+          <div class="pImg ${modeClass}">
+            ${modeClass === "isPhoto" ? `<img class="bg" src="${imgSrc}" alt="">` : ``}
+            <img class="fg" src="${imgSrc}" alt="${p.name}">
+            <div class="badgeStar">★ 5.0</div>
+            ${p.tag ? `<div class="badgeType">${p.tag}</div>` : ``}
+          </div>
+          <div class="pBody">
+            <h3 class="pTitle">${p.name || "Produkt"}</h3>
+            <p class="pDesc">${p.desc || "Bestseller (Demo)."}</p>
+          </div>
+          <div class="pBottom">
+            <div class="pPrice">${priceHTML}</div>
+            <div class="pStock">${stockText}</div>
+          </div>
+        </article>
+      </a>
+    `;
+  }
+
+  (function renderBestsellers(){
+    const grid = document.getElementById("bestsellerGrid");
+    const list = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
+
+    const picks = BESTSELLER_IDS
+      .map(id => list.find(p => Number(p.id) === Number(id)))
+      .filter(Boolean)
+      .slice(0, 3);
+
+    grid.innerHTML = picks.length
+      ? picks.map(bestsellerCardHTML).join("")
+      : `<div class="empty">Keine Bestseller ausgewählt.</div>`;
+  })();
+
+  // ===== particles =====
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+  let W=0, H=0, DPR=1, parts=[];
+
+  function resize(){
+    DPR = window.devicePixelRatio || 1;
+    W = canvas.width = Math.floor(window.innerWidth * DPR);
+    H = canvas.height = Math.floor(window.innerHeight * DPR);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
+    parts = Array.from({length: count}, () => ({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: (Math.random()*2.0 + 0.7) * DPR,
+      s: (Math.random()*0.18 + 0.06) * DPR,
+      a: Math.random()*0.55 + 0.16
+    }));
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    ctx.shadowBlur = 12 * DPR;
+    ctx.shadowColor = "rgba(255,255,255,.10)";
+
+    for(const p of parts){
+      p.y += p.s;
+      if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+
+      const t = Math.random();
+      if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
+      else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
+
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (reduceMotion) {
+    canvas.style.display = "none";
+  } else {
+    window.addEventListener("resize", resize);
+    resize();
+    tick();
+  }
+</script>
+<script src="cart.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

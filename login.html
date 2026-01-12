@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Login • PremiumShop</title>
+
+  <style>
+    :root{
+      --bg:#05060a;
+      --bg2:#070a12;
+      --text:#f4f6ff;
+      --muted:rgba(244,246,255,.72);
+      --shadow2: 0 16px 55px rgba(0,0,0,.52);
+      --r22:22px;
+      --max:1180px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 50% -10%, rgba(233,237,247,.16), rgba(0,0,0,0) 62%),
+        radial-gradient(900px 600px at 12% 80%, rgba(96,165,250,.12), rgba(0,0,0,0) 66%),
+        radial-gradient(900px 600px at 88% 85%, rgba(255,255,255,.06), rgba(0,0,0,0) 68%),
+        linear-gradient(180deg,var(--bg2),var(--bg));
+    }
+    .wrap{ width:min(var(--max), 92vw); margin:0 auto; }
+
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(12px);
+      background: rgba(5,6,10,.62);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .navRow{
+      padding:14px 0;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+    }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:38px; height:38px; border-radius:14px;
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.36), rgba(255,255,255,0)),
+        linear-gradient(135deg, rgba(233,237,247,.75), rgba(16,18,26,.85));
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 16px 36px rgba(0,0,0,.50);
+    }
+    .brandText b{ font-size:14px; letter-spacing:.6px; text-transform: uppercase; }
+    .brandText small{ display:block; margin-top:4px; color: rgba(243,246,255,.60); font-weight:850; }
+
+    .pill{
+      padding:10px 14px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      text-decoration:none;
+      font-weight: 950;
+      font-size: 13px;
+      letter-spacing:.25px;
+      box-shadow: 0 14px 34px rgba(0,0,0,.26);
+    }
+    .pill{
+  color: rgba(255,255,255,.95);
+}
+    .pill:hover{ filter: brightness(1.06); }
+.pill:hover{
+  color:#fff;
+}
+    .card{
+      width:min(520px, 100%);
+      margin: 46px auto 0;
+      border-radius: var(--r22);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.055);
+      box-shadow: var(--shadow2);
+      padding: 18px;
+    }
+    h1{
+      margin:0 0 6px;
+      font-size: 28px;
+      letter-spacing:.6px;
+      text-transform: uppercase;
+    }
+    .sub{
+      margin:0 0 16px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+      font-size: 13.5px;
+    }
+    .row{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+    label{ font-weight: 1000; color: rgba(243,246,255,.88); font-size: 12.5px; letter-spacing:.2px; }
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(243,246,255,.94);
+      font-weight: 900;
+      outline:none;
+    }
+    input:focus{ border-color: rgba(255,255,255,.22); }
+
+    .btn{
+      width:100%;
+      margin-top: 14px;
+      display:inline-flex; align-items:center; justify-content:center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.86);
+      color: rgba(255,255,255,.94);
+      font-weight: 1100;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 56px rgba(0,0,0,.48);
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+
+    .hint{
+      margin-top: 12px;
+      color: rgba(243,246,255,.55);
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .msg{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(243,246,255,.92);
+      font-weight: 900;
+      display:none;
+    }
+    .msg.error{ border-color: rgba(255,77,77,.35); }
+    .msg.ok{ border-color: rgba(96,165,250,.35); }
+
+    @media (max-width: 640px){
+      .card{ margin-top: 28px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap navRow">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brandText">
+          <b>PremiumShop</b>
+          <small>Store • Membership • Service</small>
+        </div>
+      </div>
+      <a class="pill" href="index.html">← Back to Home</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card" aria-label="Login">
+      <h1>Customer Login</h1>
+      <p class="sub">
+        Demo-Login (ohne Backend). Später ersetzen wir das durch echten Login (DB + Sessions).
+      </p>
+
+      <form id="loginForm" autocomplete="on">
+        <div class="row">
+          <label for="email">E-Mail</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="row">
+          <label for="password">Passwort</label>
+          <input id="password" name="password" type="password" placeholder="••••••••" required />
+        </div>
+
+        <button class="btn" type="submit">Login</button>
+
+        <div id="msg" class="msg"></div>
+
+        <div class="hint">
+          <b>Demo Zugang:</b> email: <code>demo@shop.com</code> • pass: <code>demo1234</code><br>
+          Hinweis: Für echten Shop bitte <b>kein</b> Passwort im Frontend prüfen – das muss serverseitig passieren.
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+  const DEMO_EMAIL = "demo@shop.com";
+  const DEMO_PASS  = "demo1234";
+
+  const next = new URLSearchParams(location.search).get("next") || "index.html";
+
+  function setSession(user){
+    sessionStorage.setItem("auth", JSON.stringify(user));
+  }
+  function showMsg(text, ok){
+    const el = document.getElementById("msg");
+    el.textContent = text;
+    el.className = "msg " + (ok ? "ok" : "error");
+    el.style.display = "block";
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value;
+
+    if(email.toLowerCase() === DEMO_EMAIL && pass === DEMO_PASS){
+      setSession({ email, name: "Demo Customer" });
+      showMsg("Login erfolgreich. Weiterleitung…", true);
+      setTimeout(() => location.href = next, 550);
+    } else {
+      showMsg("Login fehlgeschlagen. Prüfe E-Mail/Passwort (Demo).", false);
+    }
+  });
+</script>
+</body>
+</html>
