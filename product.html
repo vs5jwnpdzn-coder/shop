@@ -592,26 +592,13 @@ footer{
 
     // Add to cart (nutzt cart.js wenn vorhanden)
     addBtn.addEventListener("click", () => {
-      if(!inStock){
-        toast("Out of stock", "error");
-        return;
-      }
-
-      if(typeof window.addToCart === "function"){
-        window.addToCart(product.id, qty);
-      } else {
-        // fallback
-        let items = [];
-        try { items = JSON.parse(localStorage.getItem("cart") || "[]"); } catch {}
-        const idx = items.findIndex(x => Number(x.id) === Number(product.id));
-        if(idx >= 0) items[idx].qty = (Number(items[idx].qty || 0) + qty);
-        else items.push({ id: Number(product.id), qty });
-        localStorage.setItem("cart", JSON.stringify(items));
-        if(typeof window.updateBadge === "function") window.updateBadge();
-      }
-
-      toast(`${qty}× ${product.name} added to cart`, "ok");
-    });
+  if(!inStock){
+    window.showToast?.("Out of stock", "error");
+    return;
+  }
+  window.addToCart(product.id, qty);
+  window.showToast?.(`${qty}× ${product.name} added to cart`, "ok");
+});
   }
 
   // ===== particles =====

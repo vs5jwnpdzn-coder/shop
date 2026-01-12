@@ -1,14 +1,30 @@
-// assets/cart.js
+/* assets/cart.js
+   Shared cart logic for all pages (products, product, cart)
+   Uses localStorage key: "cart"
+*/
+
 (function(){
-  // ===== CART STORAGE =====
+  "use strict";
+
+  const CART_KEY = "cart";
+
+  // ===== STORAGE =====
   function getCart(){
-    try { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || "[]"); }
     catch { return []; }
   }
   function setCart(items){
-    localStorage.setItem("cart", JSON.stringify(items));
+    localStorage.setItem(CART_KEY, JSON.stringify(items));
   }
 
+  // qty clamp helper
+  function clampQty(n){
+    n = Number(n);
+    if(!Number.isFinite(n)) n = 1;
+    return Math.max(1, Math.min(99, n));
+  }
+
+  // ===== BADGE =====
   function updateBadge(){
     const items = getCart();
     const count = items.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
@@ -16,7 +32,56 @@
     if(el) el.textContent = String(count);
   }
 
-  // ===== PRICE HELPERS =====
+  // ===== CORE OPS =====
+  function addToCart(id, qty = 1){
+    const pid = Number(id);
+    if(!Number.isFinite(pid) || pid <= 0) return;
+
+    qty = clampQty(qty);
+
+    const items = getCart();
+    const idx = items.findIndex(x => Number(x.id) === pid);
+
+    if(idx >= 0){
+      items[idx].qty = clampQty((Number(items[idx].qty) || 0) + qty);
+    } else {
+      items.push({ id: pid, qty });
+    }
+
+    setCart(items);
+    updateBadge();
+  }
+
+  function setCartQty(id, qty){
+    const pid = Number(id);
+    if(!Number.isFinite(pid) || pid <= 0) return;
+
+    qty = clampQty(qty);
+
+    const items = getCart();
+    const idx = items.findIndex(x => Number(x.id) === pid);
+    if(idx < 0) return;
+
+    items[idx].qty = qty;
+    setCart(items);
+    updateBadge();
+  }
+
+  function removeFromCart(id){
+    const pid = Number(id);
+    const items = getCart().filter(x => Number(x.id) !== pid);
+    setCart(items);
+    updateBadge();
+  }
+
+  function clearCart(){
+    setCart([]);
+    updateBadge();
+  }
+
+  // ===== OPTIONAL: CART PAGE RENDER =====
+  // If cart.html has these IDs, we can render automatically:
+  // #cartItems, #cartEmpty, #subtotal, #shipping, #total, #checkoutBtn
   function parsePrice(value){
     if(value == null) return 0;
     const s = String(value).replace(",", ".").replace(/[^0-9.]/g, "");
@@ -31,44 +96,12 @@
     if(sale > 0) return sale;
     return parsePrice(p.price);
   }
-
-  // ===== AUTH CHECK (Checkout requires login) =====
   function getAuth(){
     try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
     catch { return null; }
   }
 
-  // ===== CART OPS (usable on product.html too) =====
-  function addToCart(productId, qty){
-    const q = Math.max(1, Math.min(99, Number(qty || 1)));
-    const items = getCart();
-    const idx = items.findIndex(x => Number(x.id) === Number(productId));
-    if(idx >= 0) items[idx].qty = (Number(items[idx].qty || 0) + q);
-    else items.push({ id: Number(productId), qty: q });
-
-    setCart(items);
-    updateBadge();
-  }
-
-  function changeQty(id, delta){
-    const items = getCart();
-    const idx = items.findIndex(x => Number(x.id) === Number(id));
-    if(idx < 0) return;
-
-    const next = Math.max(1, Math.min(99, Number(items[idx].qty || 1) + delta));
-    items[idx].qty = next;
-    setCart(items);
-    renderCart();
-  }
-
-  function removeItem(id){
-    const items = getCart().filter(x => Number(x.id) !== Number(id));
-    setCart(items);
-    renderCart();
-  }
-
-  // ===== RENDER CART (only cart.html) =====
-  function renderCart(){
+  function renderCartPage(){
     const itemsWrap = document.getElementById("cartItems");
     if(!itemsWrap) return; // not on cart.html
 
@@ -77,15 +110,16 @@
     const shippingEl = document.getElementById("shipping");
     const totalEl = document.getElementById("total");
 
-    const cart = getCart();
     const products = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
     const byId = new Map(products.map(p => [Number(p.id), p]));
 
-    const cleaned = cart
-      .map(it => ({ id: Number(it.id), qty: Math.max(1, Number(it.qty || 1)) }))
+    // clean cart
+    const raw = getCart();
+    const cleaned = raw
+      .map(it => ({ id: Number(it.id), qty: clampQty(it.qty || 1) }))
       .filter(it => byId.has(it.id));
 
-    if(JSON.stringify(cleaned) !== JSON.stringify(cart)) setCart(cleaned);
+    if(JSON.stringify(cleaned) !== JSON.stringify(raw)) setCart(cleaned);
 
     itemsWrap.innerHTML = "";
     let subtotal = 0;
@@ -109,10 +143,12 @@
 
       const imgSrc = p.img || "images/placeholder.jpg";
 
-      const el = document.createElement("div");
-      el.className = "item";
-      el.innerHTML = `
-        <div class="thumb"><img src="${imgSrc}" alt="${p.name || "Product"}"></div>
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="thumb">
+          <img src="${imgSrc}" alt="${p.name || "Product"}">
+        </div>
 
         <div>
           <div class="name">${p.name || "Product"}</div>
@@ -134,10 +170,10 @@
           <button class="linkBtn" type="button" data-act="remove" data-id="${it.id}">Remove</button>
         </div>
       `;
-      itemsWrap.appendChild(el);
+      itemsWrap.appendChild(row);
     }
 
-    const shipping = 0; // demo
+    const shipping = 0;
     const total = subtotal + shipping;
 
     if(subtotalEl) subtotalEl.textContent = formatEUR(subtotal);
@@ -147,7 +183,7 @@
     updateBadge();
   }
 
-  function bindCartEvents(){
+  function bindCartPageEvents(){
     const itemsWrap = document.getElementById("cartItems");
     if(itemsWrap){
       itemsWrap.addEventListener("click", (e) => {
@@ -157,38 +193,53 @@
         const id = btn.getAttribute("data-id");
         if(!act || !id) return;
 
-        if(act === "dec") changeQty(id, -1);
-        if(act === "inc") changeQty(id, +1);
-        if(act === "remove") removeItem(id);
+        const pid = Number(id);
+        const cart = getCart();
+        const found = cart.find(x => Number(x.id) === pid);
+        const current = found ? clampQty(found.qty || 1) : 1;
+
+        if(act === "dec") setCartQty(pid, current - 1);
+        if(act === "inc") setCartQty(pid, current + 1);
+        if(act === "remove") removeFromCart(pid);
+
+        renderCartPage();
       });
     }
 
     const checkoutBtn = document.getElementById("checkoutBtn");
-    if(checkoutBtn){
-      checkoutBtn.addEventListener("click", () => {
-        const user = getAuth();
-        if(!user){
-          location.href = "login.html?next=" + encodeURIComponent("cart.html");
-          return;
-        }
-
-        // DEMO: später hier Hoodpay Redirect starten
-        location.href = "success.html?paid=1";
-      });
+if(checkoutBtn){
+  checkoutBtn.addEventListener("click", () => {
+    const user = getAuth();
+    if(!user){
+      location.href = "login.html?next=cart.html";
+      return;
     }
+
+    // Platzhalter für Hoodpay
+    if(typeof window.showToast === "function"){
+      window.showToast("Checkout startet bald (Hoodpay)", "ok");
+    }
+  });
+}
   }
+
+  // ===== EXPORTS (GLOBAL) =====
+  window.getCart = getCart;
+  window.setCart = setCart;
+  window.updateBadge = updateBadge;
+
+  window.addToCart = addToCart;
+  window.setCartQty = setCartQty;
+  window.removeFromCart = removeFromCart;
+  window.clearCart = clearCart;
+
+  window.renderCartPage = renderCartPage;
 
   // ===== INIT =====
   document.addEventListener("DOMContentLoaded", () => {
     updateBadge();
-    renderCart();
-    bindCartEvents();
+    renderCartPage();
+    bindCartPageEvents();
   });
 
-  // exports (für product.html)
-  window.getCart = getCart;
-  window.setCart = setCart;
-  window.updateBadge = updateBadge;
-  window.addToCart = addToCart;
-  window.renderCart = renderCart;
 })();
