@@ -4,31 +4,257 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Success • PremiumShop</title>
+
   <style>
-    body{margin:0;font-family:system-ui;color:#f4f6ff;background:#05060a}
-    .wrap{width:min(900px,92vw);margin:40px auto}
-    .card{padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
-    a{color:#fff}
+    :root{
+      --bg:#05060a;
+      --bg2:#070a12;
+      --text:#f4f6ff;
+      --muted:rgba(244,246,255,.72);
+      --shadow2: 0 16px 55px rgba(0,0,0,.52);
+      --r22:22px;
+      --max:900px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 50% -10%, rgba(233,237,247,.16), rgba(0,0,0,0) 62%),
+        radial-gradient(900px 600px at 12% 80%, rgba(96,165,250,.12), rgba(0,0,0,0) 66%),
+        radial-gradient(900px 600px at 88% 85%, rgba(255,255,255,.06), rgba(0,0,0,0) 68%),
+        linear-gradient(180deg,var(--bg2),var(--bg));
+      overflow-x:hidden;
+    }
+    a{ color:inherit; text-decoration:none; }
+
+    .wrap{ width:min(var(--max), 92vw); margin: 40px auto; }
+
+    .card{
+      border-radius: var(--r22);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-120px;
+      background: linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.10), rgba(255,255,255,0));
+      transform: rotate(12deg) translateX(-30%);
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(28px, 4.2vw, 44px);
+      letter-spacing:.6px;
+      text-transform: uppercase;
+      text-shadow: 0 22px 70px rgba(0,0,0,.62);
+    }
+    .sub{
+      margin:10px 0 0;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .row{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.30);
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .label{
+      color: rgba(243,246,255,.70);
+      font-weight: 950;
+      letter-spacing:.2px;
+      font-size: 12.5px;
+      text-transform: uppercase;
+    }
+    .value{
+      font-weight: 1100;
+      letter-spacing:.2px;
+      word-break: break-all;
+      text-align:right;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .copyBtn{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(243,246,255,.95);
+      font-weight: 1000;
+      letter-spacing:.2px;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease;
+      white-space:nowrap;
+    }
+    .copyBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    .copyBtn:active{ transform: translateY(0px) scale(.99); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,12,18,.58);
+      font-weight: 1000;
+      font-size: 12.5px;
+      margin-top: 14px;
+    }
+
+    .actions{
+      margin-top: 16px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+    }
+    .btn{
+      padding:11px 14px;
+      border-radius:999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      font-weight: 1000;
+      letter-spacing:.22px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.42);
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    .btnPrimary{
+      background: linear-gradient(135deg, rgba(233,237,247,.20), rgba(255,255,255,.06), rgba(96,165,250,.12));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .hint{
+      margin-top: 12px;
+      color: rgba(243,246,255,.55);
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1.55;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Payment erfolgreich ✅</h1>
-      <p id="msg">Danke! (Demo)</p>
-      <p><a href="cart.html">Zurück zum Cart</a> • <a href="products.html">Weiter shoppen</a></p>
+      <h1 id="headline">Payment Status</h1>
+      <p class="sub" id="msg">Bitte warten…</p>
+
+      <div class="grid" id="details" style="display:none;">
+        <div class="row">
+          <div class="label">Order ID</div>
+          <div class="value">
+            <span id="orderId">—</span>
+            <button class="copyBtn" id="copyBtn" type="button" style="display:none;">Copy</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="label">Betrag</div>
+          <div class="value" id="amount">—</div>
+        </div>
+      </div>
+
+      <div class="pill" id="badge" style="display:none;">✅ Payment erfolgreich</div>
+
+      <div class="actions">
+        <a class="btn btnPrimary" href="products.html">Weiter shoppen</a>
+        <a class="btn" href="cart.html">Zum Cart</a>
+      </div>
+
+      <div class="hint">
+        Demo: Später kommt hier eine echte Bestätigung (z.B. über Webhook/Payment Provider).
+      </div>
     </div>
   </div>
 
   <script>
+    // optional: verhindert, dass Browser diese Seite cached und dann "alte" Order-Infos zeigt
+    // (hilft v.a. bei Back/Forward-Caches in manchen Browsern)
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted) location.reload();
+    });
+
+    function formatEURFromCents(cents){
+      const n = (Number(cents) || 0) / 100;
+      return "€" + n.toFixed(2);
+    }
+
     const params = new URLSearchParams(location.search);
-    const paid = params.get("paid");
+    const paid = params.get("paid");                // "1"
+    const orderId = (params.get("orderId") || "").trim();
+    const totalCents = params.get("totalCents");    // "1234"
+
+    const headline = document.getElementById("headline");
+    const msg = document.getElementById("msg");
+    const badge = document.getElementById("badge");
+    const details = document.getElementById("details");
+    const orderEl = document.getElementById("orderId");
+    const amountEl = document.getElementById("amount");
+    const copyBtn = document.getElementById("copyBtn");
+
+    function setSuccess(){
+      headline.textContent = "Payment erfolgreich ✅";
+      msg.textContent = "Danke! Deine Demo-Bestellung wurde bestätigt.";
+      badge.style.display = "inline-flex";
+      details.style.display = "grid";
+
+      orderEl.textContent = orderId || "—";
+
+      if(orderId){
+        copyBtn.style.display = "inline-flex";
+        copyBtn.addEventListener("click", async () => {
+          try{
+            await navigator.clipboard.writeText(orderId);
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => (copyBtn.textContent = "Copy"), 900);
+          }catch{
+            // fallback: nichts
+          }
+        });
+      }
+
+      amountEl.textContent =
+        (totalCents != null && totalCents !== "")
+          ? formatEURFromCents(totalCents)
+          : "—";
+    }
+
+    function setMissing(){
+      headline.textContent = "Keine Zahlungsinfo";
+      msg.textContent = "Hinweis: Keine gültige Zahlungsbestätigung gefunden.";
+      badge.style.display = "none";
+      details.style.display = "none";
+    }
+
     if(paid === "1"){
-      document.getElementById("msg").textContent =
-        "Demo: Zahlung bestätigt. Später kommt hier die echte Bestätigung über Webhook.";
+      setSuccess();
     } else {
-      document.getElementById("msg").textContent =
-        "Hinweis: Keine Zahlungsinfo gefunden.";
+      setMissing();
     }
   </script>
 </body>

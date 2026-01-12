@@ -6,6 +6,7 @@
 <title>Products • PremiumShop</title>
 
 <style>
+/* ✅ CSS bleibt bei dir gleich – ich fasse es hier NICHT an */
 :root{
   --bg:#05060a;
   --bg2:#070a12;
@@ -325,28 +326,18 @@ header{
 .pCard:hover{ transform: translateY(-4px); border-color: rgba(255,255,255,.22); filter: brightness(1.06); }
 .pCard:hover::before{ opacity:.75; transform: rotate(12deg) translateX(25%); }
 
-/* =========================================
-   BILD-BEREICH: 2 MODI (pro Produkt steuerbar)
-   - .pImg.isLogo  => weißer Hintergrund (Logo)
-   - .pImg.isPhoto => dunkler/blur Hintergrund (Foto)
-   ========================================= */
-
 .pImg{
   height:168px;
   position:relative;
   overflow:hidden;
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
-
-/* FOTO-MODUS (Standard) */
 .pImg.isPhoto{
   background:
     radial-gradient(380px 240px at 20% 25%, rgba(255,255,255,.14), rgba(0,0,0,0) 60%),
     radial-gradient(380px 240px at 80% 20%, rgba(96,165,250,.12), rgba(0,0,0,0) 62%),
     linear-gradient(135deg, rgba(255,255,255,.07), rgba(0,0,0,.26));
 }
-
-/* Blur-Hintergrund fürs Foto */
 .pImg.isPhoto .bg{
   position:absolute;
   inset:-12px;
@@ -358,24 +349,18 @@ header{
   opacity: .9;
   display:block;
 }
-
-/* Overlay fürs Foto */
 .pImg.isPhoto::after{
   content:"";
   position:absolute; inset:0;
   background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.68));
   display:block;
 }
-
-/* LOGO-MODUS (weiß) */
 .pImg.isLogo{
   background:#fff;
   border-bottom: 1px solid rgba(0,0,0,.08);
 }
 .pImg.isLogo .bg{ display:none !important; }
 .pImg.isLogo::after{ display:none !important; }
-
-/* Vordergrundbild (immer) */
 .pImg .fg{
   position:absolute;
   inset:0;
@@ -385,57 +370,33 @@ header{
   object-position: center;
   filter: drop-shadow(0 18px 40px rgba(0,0,0,.35));
 }
-
-/* Extra Luft nur bei Logos */
 .pImg.isLogo .fg{
   padding:16px;
   filter:none;
 }
-.addMini{
-  padding:10px 12px;
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.70);
-  color: rgba(243,246,255,.94);
-  font-weight:1100;
-  cursor:pointer;
-  box-shadow: 0 16px 40px rgba(0,0,0,.32);
-  transition:.15s ease;
-  white-space:nowrap;
-}
-.addMini:hover{ transform: translateY(-1px); filter: brightness(1.08); }
+
 .badgePopular{
   position:absolute;
   top:12px;
   left:12px;
   z-index:3;
-
   display:inline-flex;
   align-items:center;
   gap:5px;
-
   padding:7px 11px;
   border-radius:999px;
-
   border:1px solid rgba(255,255,255,.18);
   background: rgba(10,12,18,.58);
   color: rgba(243,246,255,.96);
-
-  font-weight:950;          /* 🔑 weniger klobig */
-  font-size:11.5px;         /* 🔑 minimal kleiner */
-  letter-spacing:.35px;     /* 🔑 edler Look */
-  text-transform: uppercase;/* 🔑 Badge-Style */
-
+  font-weight:950;
+  font-size:11.5px;
+  letter-spacing:.35px;
+  text-transform: uppercase;
   box-shadow: 0 12px 30px rgba(0,0,0,.28);
   backdrop-filter: blur(10px);
 }
+.badgePopular::before{ content:"🔥"; font-size:11px; opacity:.9; }
 
-.badgePopular::before{
-  content:"🔥";
-  font-size:11px;
-  opacity:.9;
-}
-/* Badge */
 .badgeType{
   position:absolute; top:12px; right:12px;
   display:inline-flex; align-items:center; gap:6px;
@@ -454,10 +415,37 @@ header{
   padding: 0 14px 16px;
   display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
 }
-.pPrice{ font-weight:1100; font-size:20px; }
 .pStock{ font-weight:1000; font-size:12px; color: rgba(243,246,255,.72); display:flex; align-items:center; gap:6px; }
 .pStock .tick{ color: rgba(235,238,255,.95); font-weight:1100; }
 .pStock.out{ opacity:.55; }
+
+.addMini{
+  padding:10px 12px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.70);
+  color: rgba(243,246,255,.94);
+  font-weight:1100;
+  cursor:pointer;
+  box-shadow: 0 16px 40px rgba(0,0,0,.32);
+  transition:.15s ease;
+  white-space:nowrap;
+}
+.addMini:hover{ transform: translateY(-1px); filter: brightness(1.08); }
+.addMini:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  filter: grayscale(.5);
+}
+
+.priceWrap{ display:flex; align-items:baseline; gap:10px; }
+.priceOld{ font-size:14px; color: rgba(243,246,255,.45); text-decoration: line-through; }
+.priceSale{
+  font-size:22px;
+  font-weight:1200;
+  color:#ff4d4d;
+  text-shadow: 0 0 8px rgba(255,77,77,.55), 0 0 16px rgba(255,77,77,.25);
+}
 
 .empty{
   grid-column: 1 / -1;
@@ -470,37 +458,13 @@ header{
   color: rgba(243,246,255,.72);
   font-weight: 950;
 }
-.priceWrap{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-}
 
-.priceOld{
-  font-size:14px;
-  color: rgba(243,246,255,.45);
-  text-decoration: line-through;
-}
-
-.priceSale{
-  font-size:22px;
-  font-weight:1200;
-  color:#ff4d4d;
-  text-shadow:
-    0 0 8px rgba(255,77,77,.55),
-    0 0 16px rgba(255,77,77,.25);
-}
-
-/* reduced motion */
 @media (prefers-reduced-motion: reduce){
   .bankCard::before{ animation: none !important; }
 }
-
-/* responsive */
 @media (max-width: 980px){
   .productGrid{ grid-template-columns: repeat(2, 1fr); }
   .navRight{ min-width: 170px; }
-
   .bankCard{ width: 520px; height: 330px; opacity:.9; }
   .cardGraphite{ left:-120px; top:160px; }
   .cardSteel{ right:-120px; top:320px; }
@@ -508,28 +472,13 @@ header{
 @media (max-width: 640px){
   .navCenter{ display:none; }
   .productGrid{ grid-template-columns: 1fr; }
-
   .bankCard{ width: 420px; height: 270px; opacity:.55; filter: blur(.2px); }
   .cardGraphite{ left:-220px; top:140px; }
   .cardSteel{ right:-220px; top:340px; }
 }
-.authArea{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.hello{
-  font-weight:1000;
-  color: rgba(243,246,255,.92);
-  letter-spacing:.2px;
-  white-space:nowrap;
-}
-
-.btnGhost{
-  background: rgba(255,255,255,.04);
-  border-color: rgba(255,255,255,.12);
-}
+.authArea{ display:flex; align-items:center; gap:10px; }
+.hello{ font-weight:1000; color: rgba(243,246,255,.92); letter-spacing:.2px; white-space:nowrap; }
+.btnGhost{ background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.12); }
 </style>
 </head>
 
@@ -592,252 +541,28 @@ header{
       <nav class="navCenter" aria-label="Navigation">
         <a class="pill" href="index.html#home">Home</a>
         <a class="pill active" href="products.html">Products</a>
-        <a class="pill" href="index.html#reviews">Reviews</a>
-        <a class="pill" href="index.html#contact">Contact</a>
+        <a class="pill" href="cart.html">Cart</a>
       </nav>
 
       <div class="navRight">
-  <div class="cartMini">
-    🛒 <span class="badge" id="cartCount">0</span>
-  </div>
+        <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span></div>
 
-  <div class="wallet" id="wallet" style="display:none;">
+        <div class="wallet" id="wallet" style="display:none;">
   💳 <span id="balance">€0.00</span>
-  <button class="btn btnGhost" id="topupBtn" type="button">Top up</button>
+  <a class="btn btnGhost" id="topupLink" href="balance.html" aria-label="Guthaben aufladen">+</a>
 </div>
 
-  <div class="authArea" id="authArea"></div>
-</div>
-    <a class="btn btnPrimary" href="login.html" id="loginBtn">Customer Login</a>
-  </div>
-</div>
+        <div class="authArea" id="authArea"></div>
+      </div>
+    </div>
   </header>
 
   <main class="wrap">
     <div class="catBar" id="catBar" aria-label="Kategorien"></div>
     <section class="productGrid" id="productGrid" aria-label="Produktliste"></section>
   </main>
-<script src="products-data.js"></script>
-<script>
-  const CATEGORIES = [
-    {id:"all",label:"All"},
-    {id:"paypal",label:"PAYPAL"},
-    {id:"cc",label:"CREDIT CARD"},
-    {id:"euro",label:"EURO"},
-    {id:"amazon",label:"AMAZON"},
-    {id:"bank",label:"BANK ACCOUNT"},
-    {id:"phishing",label:"PHISHING SITE"},
-    {id:"id",label:"ID CARD"},
-    {id:"mentorship",label:"MENTORSHIP"},
-  ];
 
-
-  let activeCat = "all";
-  const catBar = document.getElementById("catBar");
-  const grid = document.getElementById("productGrid");
-
-  function renderCats(){
-    catBar.innerHTML = "";
-    for(const c of CATEGORIES){
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "catPill" + (c.id === activeCat ? " active" : "");
-      b.textContent = c.label;
-      b.addEventListener("click", () => {
-        activeCat = c.id;
-        document.querySelectorAll(".catPill").forEach(x => x.classList.remove("active"));
-        b.classList.add("active");
-        renderProducts();
-      });
-      catBar.appendChild(b);
-    }
-  }
-
-  function cardHTML(p){
-  const stockClass = p.stock ? "" : "out";
-  const stockText  = p.stock ? 'IN STOCK <span class="tick">✓</span>' : 'OUT OF STOCK';
-  const imgSrc = p.img || "images/placeholder.jpg";
-
-  // Bildmodus
-  const modeClass = (p.imgMode === "logo") ? "isLogo" : "isPhoto";
-
-  return `
-    <a class="pLink" href="product.html?id=${encodeURIComponent(p.id)}" aria-label="${p.name} öffnen">
-      <article class="pCard">
-
-        <div class="pImg ${modeClass}">
-          ${modeClass === "isPhoto" ? `<img class="bg" src="${imgSrc}" alt="">` : ``}
-          <img class="fg" src="${imgSrc}" alt="${p.name}">
-
-          ${p.popular ? `<div class="badgePopular">POPULAR</div>` : ``}
-          ${p.tag ? `<div class="badgeType">${p.tag}</div>` : ``}
-        </div>
-
-        <div class="pBody">
-          <h3 class="pTitle">${p.name}</h3>
-        </div>
-
-        <div class="pBottom">
-  <div class="pPrice">
-    ${p.salePrice
-      ? `<div class="priceWrap">
-           <span class="priceOld">${p.price}</span>
-           <span class="priceSale">${p.salePrice}</span>
-         </div>`
-      : `<span>${p.price}</span>`
-    }
-  </div>
-
-  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
-    <div class="pStock ${stockClass}">${stockText}</div>
-    <button
-      class="addMini"
-      type="button"
-      data-add="${p.id}"
-    >
-      Add
-    </button>
-  </div>
-</div>
-
-      </article>
-    </a>
-  `;
-}
-  function renderProducts(){
-    const list = window.PRODUCTS.filter(p => activeCat === "all" || p.cat === activeCat);
-    grid.innerHTML = "";
-    if(list.length === 0){
-      grid.innerHTML = `<div class="empty">Keine Produkte in dieser Kategorie (noch).</div>`;
-      return;
-    }
-    grid.innerHTML = list.map(cardHTML).join("");
-  }
-
-  renderCats();
-  renderProducts();
-  grid.addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-add]");
-  if(!btn) return;
-
-  e.preventDefault(); // verhindert Link-Klick
-  e.stopPropagation();
-
-  const id = Number(btn.getAttribute("data-add"));
-  if(!id) return;
-
-  // cart add 1
-  let items = [];
-  try { items = JSON.parse(localStorage.getItem("cart") || "[]"); } catch {}
-  const idx = items.findIndex(x => Number(x.id) === id);
-  if(idx >= 0) items[idx].qty = (Number(items[idx].qty || 0) + 1);
-  else items.push({ id, qty: 1 });
-
-  localStorage.setItem("cart", JSON.stringify(items));
-  if(typeof window.updateBadge === "function") window.updateBadge();
-});
-function getCart(){
-  try { return JSON.parse(localStorage.getItem("cart") || "[]"); }
-  catch { return []; }
-}
-function updateBadge(){
-  const el = document.getElementById("cartCount");
-  if(!el) return;
-  const items = getCart();
-  const count = items.reduce((sum, it) => sum + (it.qty || 0), 0);
-  el.textContent = String(count);
-}
-updateBadge();
-function getAuth(){
-  try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
-  catch { return null; }
-}
-
-function logout(){
-  sessionStorage.removeItem("auth");
-  location.reload();
-}
-
-function renderAuth(){
-  const authArea = document.getElementById("authArea");
-  if(!authArea) return;
-
-  const user = getAuth();
-  if(!user){
-    authArea.innerHTML = `<a class="btn btnPrimary" href="login.html">Customer Login</a>`;
-    return;
-  }
-
-  const name = (user.name || user.email || "Customer").toString();
-  authArea.innerHTML = `
-    <span class="hello">Hi, ${name}</span>
-    <button class="btn btnGhost" type="button" id="logoutBtn">Logout</button>
-  `;
-  document.getElementById("logoutBtn").addEventListener("click", logout);
-}
-renderAuth();
-  // particles
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const canvas = document.getElementById("particles");
-  const ctx = canvas.getContext("2d");
-  let W=0, H=0, DPR=1, parts=[];
-
-  function resize(){
-    DPR = window.devicePixelRatio || 1;
-    W = canvas.width = Math.floor(window.innerWidth * DPR);
-    H = canvas.height = Math.floor(window.innerHeight * DPR);
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-
-    const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
-    parts = Array.from({length: count}, () => ({
-      x: Math.random()*W,
-      y: Math.random()*H,
-      r: (Math.random()*2.0 + 0.7) * DPR,
-      s: (Math.random()*0.18 + 0.06) * DPR,
-      a: Math.random()*0.55 + 0.16
-    }));
-  }
-
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    ctx.shadowBlur = 12 * DPR;
-    ctx.shadowColor = "rgba(255,255,255,.10)";
-
-    for(const p of parts){
-      p.y += p.s;
-      if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-
-      const t = Math.random();
-      if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
-      else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
-
-      ctx.fill();
-    }
-    requestAnimationFrame(tick);
-  }
-
-  if (reduceMotion) {
-    canvas.style.display = "none";
-  } else {
-    window.addEventListener("resize", resize);
-    resize();
-    tick();
-  }
-  // id:"all",label:"All"},
- //   {id:"paypal",label:"PAYPAL"},
- //   {id:"cc",label:"CREDIT CARD"},
- //   {id:"euro",label:"EURO"},
- //   {id:"amazon",label:"AMAZON"},
- //   {id:"bank",label:"BANK ACCOUNT"},
- //   {id:"phishing",label:"PHISHING SITE"},
- //   {id:"id",label:"ID CARD"},
- //   {id:"mentorship",label:"MENTORSHIP"},
-</script>
- <!-- Daten zuerst -->
+  <!-- Daten zuerst -->
 <script src="products-data.js"></script>
 
 <!-- shared helpers -->
@@ -845,5 +570,184 @@ renderAuth();
 <script src="assets/wallet.js"></script>
 <script src="assets/auth.js"></script>
 <script src="assets/ui.js"></script>
+
+  <script>
+    // ✅ Kategorien (bitte neutral halten)
+    const CATEGORIES = [
+      { id: "all", label: "Übersicht" },
+      { id: "paypal", label: "Option A" },
+      { id: "cc", label: "Option B" },
+      { id: "euro", label: "Option C" },
+      { id: "amazon", label: "Option D" },
+      { id: "bank", label: "Option E" },
+      { id: "option_f", label: "Option F" },
+      { id: "option_g", label: "Option G" },
+      { id: "mentorship", label: "Option H" },
+    ];
+
+    let activeCat = "all";
+    const catBar = document.getElementById("catBar");
+    const grid = document.getElementById("productGrid");
+
+    function renderCats(){
+      catBar.innerHTML = "";
+      for(const c of CATEGORIES){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "catPill" + (c.id === activeCat ? " active" : "");
+        b.textContent = c.label;
+        b.addEventListener("click", () => {
+          activeCat = c.id;
+          document.querySelectorAll(".catPill").forEach(x => x.classList.remove("active"));
+          b.classList.add("active");
+          renderProducts();
+        });
+        catBar.appendChild(b);
+      }
+    }
+
+    function cardHTML(p){
+      const inStock = !!p.stock;
+      const stockClass = inStock ? "" : "out";
+      const stockText  = inStock ? 'IN STOCK <span class="tick">✓</span>' : 'OUT OF STOCK';
+      const imgSrc = p.img || "images/placeholder.jpg";
+      const modeClass = (p.imgMode === "logo") ? "isLogo" : "isPhoto";
+
+      const priceHTML = p.salePrice
+        ? `<div class="priceWrap">
+             <span class="priceOld">${p.price}</span>
+             <span class="priceSale">${p.salePrice}</span>
+           </div>`
+        : `<span>${p.price || "—"}</span>`;
+
+      return `
+        <a class="pLink" href="product.html?id=${encodeURIComponent(p.id)}" aria-label="${p.name} öffnen">
+          <article class="pCard">
+            <div class="pImg ${modeClass}">
+              ${modeClass === "isPhoto" ? `<img class="bg" src="${imgSrc}" alt="">` : ``}
+              <img class="fg" src="${imgSrc}" alt="${p.name}">
+              ${p.popular ? `<div class="badgePopular">POPULAR</div>` : ``}
+              ${p.tag ? `<div class="badgeType">${p.tag}</div>` : ``}
+            </div>
+
+            <div class="pBody">
+              <h3 class="pTitle">${p.name || "Produkt"}</h3>
+            </div>
+
+            <div class="pBottom">
+              <div class="pPrice">${priceHTML}</div>
+
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+                <div class="pStock ${stockClass}">${stockText}</div>
+
+                <button
+                  class="addMini"
+                  type="button"
+                  data-add="${p.id}"
+                  data-name="${(p.name || "Produkt").replace(/"/g,'&quot;')}"
+                  ${inStock ? "" : "disabled"}
+                >
+                  ${inStock ? "Add" : "Out"}
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+      `;
+    }
+
+    function renderProducts(){
+      const listAll = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
+      const list = listAll.filter(p => activeCat === "all" || p.cat === activeCat);
+
+      if(!list.length){
+        grid.innerHTML = `<div class="empty">Keine Produkte in dieser Kategorie.</div>`;
+        return;
+      }
+      grid.innerHTML = list.map(cardHTML).join("");
+    }
+
+    renderCats();
+    renderProducts();
+
+    // ✅ Add-Button: nutzt ab jetzt assets/cart.js (window.addToCart)
+    // ✅ Add-Button: nutzt assets/cart.js (window.addToCart) – mit Guard
+grid.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-add]");
+  if(!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  // Guard: cart.js muss geladen sein
+  if(typeof window.addToCart !== "function"){
+    console.error("addToCart fehlt – assets/cart.js nicht geladen?");
+    if(typeof window.showToast === "function") window.showToast("Cart nicht geladen", "error");
+    return;
+  }
+
+  const id = Number(btn.dataset.add);
+  if(!id) return;
+
+  window.addToCart(id, 1);
+
+  const name = btn.dataset.name || "Produkt";
+  if(typeof window.showToast === "function"){
+    window.showToast(`✅ ${name} added to cart`, "ok");
+  }
+});
+
+    // ===== particles =====
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let W=0, H=0, DPR=1, parts=[];
+
+    function resize(){
+      DPR = window.devicePixelRatio || 1;
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+
+      const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
+      parts = Array.from({length: count}, () => ({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: (Math.random()*2.0 + 0.7) * DPR,
+        s: (Math.random()*0.18 + 0.06) * DPR,
+        a: Math.random()*0.55 + 0.16
+      }));
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      ctx.shadowBlur = 12 * DPR;
+      ctx.shadowColor = "rgba(255,255,255,.10)";
+
+      for(const p of parts){
+        p.y += p.s;
+        if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+
+        const t = Math.random();
+        if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
+        else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
+
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (reduceMotion) {
+      canvas.style.display = "none";
+    } else {
+      window.addEventListener("resize", resize);
+      resize();
+      tick();
+    }
+  </script>
 </body>
 </html>

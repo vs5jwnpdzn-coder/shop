@@ -22,7 +22,6 @@
       window.showToast(msg, type);
       return;
     }
-    // fallback mini-toast
     const d = document.createElement("div");
     d.style.cssText = `
       position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
@@ -41,7 +40,6 @@
   }
 
   // ===== PRICE HELPERS =====
-  // akzeptiert: "€14.99", "14.99", "14,99", usw.
   function parsePrice(value){
     if(value == null) return 0;
     const s = String(value).replace(",", ".").replace(/[^0-9.]/g, "");
@@ -53,7 +51,6 @@
     return `€${(Math.round(n * 100) / 100).toFixed(2)}`;
   }
 
-  // nimmt salePrice wenn vorhanden, sonst price
   function productUnitPrice(p){
     const sale = parsePrice(p && p.salePrice);
     if(sale > 0) return sale;
@@ -69,7 +66,6 @@
   }
 
   // ===== ADD TO CART (global) =====
-  // damit product.html / products.html einfach window.addToCart(id, qty) callen können
   function addToCart(id, qty){
     const pid = Number(id);
     const q = Math.max(1, Math.min(99, Number(qty || 1)));
@@ -77,8 +73,11 @@
     const items = getCart();
     const idx = items.findIndex(x => Number(x.id) === pid);
 
-    if(idx >= 0) items[idx].qty = Math.max(1, Math.min(99, Number(items[idx].qty || 0) + q));
-    else items.push({ id: pid, qty: q });
+    if(idx >= 0){
+      items[idx].qty = Math.max(1, Math.min(99, Number(items[idx].qty || 0) + q));
+    } else {
+      items.push({ id: pid, qty: q });
+    }
 
     setCart(items);
     updateBadge();
@@ -93,24 +92,26 @@
     const shippingEl  = document.getElementById("shipping");
     const totalEl     = document.getElementById("total");
 
-    // Wenn nicht auf cart.html -> nichts rendern
-    if(!itemsWrap) {
+    // Nicht auf cart.html -> nur Badge updaten
+    if(!itemsWrap){
       updateBadge();
       return;
     }
 
     const cart = getCart();
 
-    // Produktdaten
+    // Produktdaten aus products-data.js (Browser: window.PRODUCTS)
     const products = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
     const byId = new Map(products.map(p => [Number(p.id), p]));
 
-    // Bereinigen (nur gültige IDs, qty >= 1)
+    // Bereinigen: nur gültige Produkte + qty 1..99
     const cleaned = cart
-      .map(it => ({ id: Number(it.id), qty: Math.max(1, Math.min(99, Number(it.qty || 1))) }))
+      .map(it => ({
+        id: Number(it.id),
+        qty: Math.max(1, Math.min(99, Number(it.qty || 1)))
+      }))
       .filter(it => byId.has(it.id));
 
-    // falls bereinigt anders -> speichern
     if(JSON.stringify(cleaned) !== JSON.stringify(cart)) setCart(cleaned);
 
     itemsWrap.innerHTML = "";
@@ -165,7 +166,6 @@
       itemsWrap.appendChild(el);
     }
 
-    // shipping demo (0.00)
     const shipping = 0;
     const total = subtotal + shipping;
 
@@ -176,14 +176,13 @@
     updateBadge();
   }
 
-  // ===== CART EVENTS (cart.html) =====
+  // ===== CART EVENTS =====
   function changeQty(id, delta){
     const items = getCart();
     const idx = items.findIndex(x => Number(x.id) === Number(id));
     if(idx < 0) return;
 
-    const next = Math.max(1, Math.min(99, Number(items[idx].qty || 1) + delta));
-    items[idx].qty = next;
+    items[idx].qty = Math.max(1, Math.min(99, Number(items[idx].qty || 1) + delta));
     setCart(items);
     renderCart();
   }
@@ -212,56 +211,74 @@
     }
 
     const checkoutBtn = document.getElementById("checkoutBtn");
-    if(checkoutBtn){
-      checkoutBtn.addEventListener("click", () => {
-        // Auth kommt aus assets/auth.js (oder fallback)
-        const user = (typeof window.getAuth === "function")
-          ? window.getAuth()
-          : (() => {
-              try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
-              catch { return null; }
-            })();
+    if(!checkoutBtn) return;
 
-        if(!user){
+    checkoutBtn.addEventListener("click", async () => {
+      if(checkoutBtn.disabled) return;
+
+      const cart = getCart();
+      if(!cart.length){
+        toast("Warenkorb ist leer", "error");
+        return;
+      }
+
+      checkoutBtn.disabled = true;
+      const oldText = checkoutBtn.textContent;
+      checkoutBtn.textContent = "Processing…";
+
+      try{
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ cart })
+        });
+
+        const data = await res.json().catch(() => null);
+
+        if(res.status === 401){
           location.href = "login.html?next=" + encodeURIComponent("cart.html");
           return;
         }
 
-        const cart = getCart();
-        if(!cart.length){
-          toast("Warenkorb ist leer", "error");
+        if(res.status === 402){
+          const bal = data?.balanceCents ?? 0;
+          const tot = data?.totalCents ?? 0;
+          toast(
+            `Nicht genug Guthaben. Balance: €${(bal/100).toFixed(2)} • Total: €${(tot/100).toFixed(2)}`,
+            "error"
+          );
           return;
         }
 
-        // Total aus UI
-        const totalEl = document.getElementById("total");
-        const total = totalEl ? parsePrice(totalEl.textContent) : 0;
-
-        // Wallet Integration (Demo): braucht window.getBalance() / window.setBalance()
-        const balance = (typeof window.getBalance === "function") ? window.getBalance() : 0;
-
-        if(balance < total){
-          toast("Nicht genug Guthaben – bitte aufladen", "error");
+        if(!res.ok){
+          console.error("Checkout error:", res.status, data);
+          toast("Checkout fehlgeschlagen (Server)", "error");
           return;
         }
 
-        if(typeof window.setBalance === "function"){
-          window.setBalance(balance - total);
-        }
-
+        // ✅ Erfolg
         clearCart();
         updateBadge();
         renderCart();
+        window.refreshBalanceUI?.();
 
-        // Wallet UI refresh (falls du #balance hast)
-        const balEl = document.getElementById("balance");
-        if(balEl && typeof window.getBalance === "function"){
-          balEl.textContent = formatEUR(window.getBalance());
-        }
+        toast("✅ Bestellung erfolgreich", "ok");
 
-        toast("✅ Bestellung erfolgreich (Demo)", "ok");
-      });
-    }
+        // ✅ Success URL mit Details
+        location.href =
+  "success.html?paid=1" +
+  "&orderId=" + encodeURIComponent(data.orderId || "") +
+  "&totalCents=" + encodeURIComponent(String(data.totalCents ?? ""));
+      } catch(err){
+        console.error(err);
+        toast("Server nicht erreichbar", "error");
+      } finally{
+        // Wenn redirect passiert, ist egal — sonst Button wieder frei
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = oldText;
+      }
+    });
   }
 
   // ===== INIT =====

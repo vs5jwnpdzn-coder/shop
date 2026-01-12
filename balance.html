@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Balance • PremiumShop</title>
+
+  <style>
+    :root{
+      --bg:#05060a;
+      --bg2:#070a12;
+      --text:#f4f6ff;
+      --muted:rgba(244,246,255,.72);
+      --shadow2: 0 16px 55px rgba(0,0,0,.52);
+      --r22:22px;
+      --max:1180px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    a{ color:inherit; text-decoration:none; }
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 50% -10%, rgba(233,237,247,.16), rgba(0,0,0,0) 62%),
+        radial-gradient(900px 600px at 12% 80%, rgba(96,165,250,.12), rgba(0,0,0,0) 66%),
+        radial-gradient(900px 600px at 88% 85%, rgba(255,255,255,.06), rgba(0,0,0,0) 68%),
+        linear-gradient(180deg,var(--bg2),var(--bg));
+      overflow-x:hidden;
+    }
+
+    .wrap{ width:min(var(--max), 92vw); margin:0 auto; }
+
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(12px);
+      background: rgba(5,6,10,.62);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .navRow{
+      padding:14px 0;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+    }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:38px; height:38px; border-radius:14px;
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.36), rgba(255,255,255,0)),
+        linear-gradient(135deg, rgba(233,237,247,.75), rgba(16,18,26,.85));
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 16px 36px rgba(0,0,0,.50);
+    }
+    .brandText b{ font-size:14px; letter-spacing:.6px; text-transform: uppercase; }
+    .brandText small{ display:block; margin-top:4px; color: rgba(243,246,255,.60); font-weight:850; }
+
+    .pill{
+      padding:10px 14px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      text-decoration:none;
+      font-weight: 950;
+      font-size: 13px;
+      letter-spacing:.25px;
+      box-shadow: 0 14px 34px rgba(0,0,0,.26);
+      color: rgba(255,255,255,.95);
+    }
+    .pill:hover{ filter: brightness(1.06); color:#fff; }
+
+    .page{
+      padding: 26px 0 40px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(28px, 4.2vw, 52px);
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      text-shadow: 0 22px 70px rgba(0,0,0,.62);
+    }
+    .sub{
+      margin:10px 0 0;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+      max-width: 900px;
+    }
+
+    .card{
+      border-radius: var(--r22);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.055);
+      box-shadow: var(--shadow2);
+      padding: 16px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .row{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top: 12px;
+    }
+    label{
+      font-weight: 1000;
+      color: rgba(243,246,255,.88);
+      font-size: 12.5px;
+      letter-spacing:.2px;
+    }
+
+    .amountWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .eur{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(243,246,255,.86);
+      font-weight: 1000;
+      min-width: 48px;
+      text-align:center;
+      user-select:none;
+    }
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(243,246,255,.94);
+      font-weight: 950;
+      outline:none;
+    }
+    input:focus{ border-color: rgba(255,255,255,.22); }
+
+    .quick{
+      margin-top:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .qbtn{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.30);
+      color: rgba(243,246,255,.94);
+      font-weight: 1000;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .qbtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+
+    .btn{
+      width:100%;
+      margin-top: 14px;
+      display:inline-flex; align-items:center; justify-content:center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.86);
+      color: rgba(255,255,255,.94);
+      font-weight: 1100;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 56px rgba(0,0,0,.48);
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      filter: grayscale(.5);
+      box-shadow:none;
+    }
+    .btn:disabled:hover{ transform:none; filter: grayscale(.5); }
+
+    .msg{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(243,246,255,.92);
+      font-weight: 900;
+      display:none;
+      line-height: 1.45;
+    }
+    .msg.error{ border-color: rgba(255,77,77,.35); }
+    .msg.ok{ border-color: rgba(96,165,250,.35); }
+
+    .mini{
+      margin-top:10px;
+      color: rgba(243,246,255,.58);
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .box{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.30);
+      padding: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:12px;
+    }
+    .k{ color: rgba(243,246,255,.70); font-weight: 950; font-size: 12.5px; text-transform: uppercase; letter-spacing:.2px;}
+    .v{ font-weight: 1100; letter-spacing:.2px; text-align:right; }
+
+    @media (max-width: 980px){
+      .page{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap navRow">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brandText">
+          <b>PremiumShop</b>
+          <small>Store • Membership • Service</small>
+        </div>
+      </div>
+
+      <a class="pill" href="index.html">← Back to Home</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page">
+      <div>
+        <h1>Balance</h1>
+        <p class="sub">
+          Guthaben aufladen (Demo). Betrag: <b>ganzzahlig</b> und mindestens <b>10€</b>.
+        </p>
+
+        <div class="card">
+          <div class="box">
+            <div class="k">Aktuelles Guthaben</div>
+            <div class="v" id="currentBalance">—</div>
+          </div>
+
+          <form id="topupForm" autocomplete="off">
+            <div class="row">
+              <label for="amount">Aufladebetrag</label>
+              <div class="amountWrap">
+                <div class="eur">€</div>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  inputmode="numeric"
+                  min="10"
+                  step="1"
+                  placeholder="z.B. 50"
+                  required
+                />
+              </div>
+
+              <div class="quick" aria-label="Schnellauswahl">
+                <button class="qbtn" type="button" data-amt="10">+10</button>
+                <button class="qbtn" type="button" data-amt="20">+20</button>
+                <button class="qbtn" type="button" data-amt="50">+50</button>
+                <button class="qbtn" type="button" data-amt="100">+100</button>
+                <button class="qbtn" type="button" data-amt="200">+200</button>
+                <button class="qbtn" type="button" data-amt="500">+500</button>
+              </div>
+
+              <button class="btn" id="payBtn" type="submit">Weiter zur Zahlung</button>
+
+              <div id="msg" class="msg"></div>
+
+              <div class="mini">
+                Hinweis: Die echte Zahlung läuft später über HoodPay. Aktuell ruft der Button nur deinen Server-Endpunkt
+                <code>/api/topup/create</code> auf und leitet auf die zurückgelieferte <code>paymentUrl</code> weiter.
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <aside class="card">
+        <h2 style="margin:0 0 6px; font-size:18px; letter-spacing:.4px; text-transform:uppercase;">Rules</h2>
+        <p class="mini" style="margin-top:0;">
+          ✅ Ganzzahlig (keine Cent) <br>
+          ✅ Minimum 10€ <br>
+          ✅ Der Server entscheidet final (Client ist nur Komfort)
+        </p>
+
+        <div class="box">
+          <div class="k">Server Flow</div>
+          <div class="v" style="text-align:right">
+            POST /api/topup/create<br>
+            → paymentUrl<br>
+            → redirect
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="k">Nach Zahlung</div>
+          <div class="v" style="text-align:right">
+            Webhook (HoodPay)<br>
+            → Balance +X<br>
+            → /api/balance zeigt neu
+          </div>
+        </div>
+
+        <a class="pill" style="display:inline-flex; margin-top:12px;" href="cart.html">Zum Cart →</a>
+      </aside>
+    </section>
+  </main>
+
+  <!-- Optional: falls du Toast/UI hast -->
+  <script src="assets/ui.js"></script>
+  <script src="assets/wallet.js"></script>
+
+  <script>
+    function showMsg(text, ok){
+      const el = document.getElementById("msg");
+      el.textContent = text;
+      el.className = "msg " + (ok ? "ok" : "error");
+      el.style.display = "block";
+    }
+
+    function hideMsg(){
+      const el = document.getElementById("msg");
+      el.style.display = "none";
+      el.textContent = "";
+      el.className = "msg";
+    }
+
+    function formatEURFromCents(cents){
+      const n = (Number(cents) || 0) / 100;
+      return "€" + n.toFixed(2);
+    }
+
+    async function api(path, opts){
+      const res = await fetch(path, {
+        credentials: "include",
+        headers: { "Content-Type": "application/json", ...(opts?.headers||{}) },
+        ...opts
+      });
+      const data = await res.json().catch(() => ({}));
+      return { ok: res.ok, status: res.status, data };
+    }
+
+    async function loadBalance(){
+      const el = document.getElementById("currentBalance");
+      try{
+        const r = await api("/api/balance");
+        if(!r.ok){
+          el.textContent = "—";
+          return;
+        }
+        el.textContent = formatEURFromCents(r.data.balanceCents);
+      } catch {
+        el.textContent = "—";
+      }
+    }
+
+    function sanitizeAmountEUR(raw){
+      // nur ganzzahlig, >= 10
+      const n = Math.floor(Number(raw));
+      if(!Number.isFinite(n)) return null;
+      if(n < 10) return null;
+      return n;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadBalance();
+
+      const amountInput = document.getElementById("amount");
+      const payBtn = document.getElementById("payBtn");
+
+      // Quick buttons
+      document.querySelectorAll("button[data-amt]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const v = Number(btn.getAttribute("data-amt") || "0");
+          amountInput.value = String(v);
+          hideMsg();
+          amountInput.focus();
+        });
+      });
+
+      document.getElementById("topupForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideMsg();
+
+        const eur = sanitizeAmountEUR(amountInput.value);
+        if(eur == null){
+          showMsg("Bitte gib einen ganzzahligen Betrag ein (mindestens 10€).", false);
+          return;
+        }
+
+        // Button sperren während Request
+        payBtn.disabled = true;
+        const oldText = payBtn.textContent;
+        payBtn.textContent = "Weiterleitung…";
+
+        try{
+          const amountCents = eur * 100;
+
+          const r = await api("/api/topup/create", {
+            method: "POST",
+            body: JSON.stringify({ amountCents })
+          });
+
+          if(r.status === 401){
+            location.href = "login.html?next=" + encodeURIComponent("balance.html");
+            return;
+          }
+
+          if(!r.ok){
+            showMsg("Top-up konnte nicht gestartet werden. (" + (r.data?.error || "error") + ")", false);
+            return;
+          }
+
+          const paymentUrl = r.data?.paymentUrl;
+          if(!paymentUrl){
+            showMsg("Server hat keine paymentUrl geliefert.", false);
+            return;
+          }
+
+          window.showToast?.("Weiterleitung zur Zahlung…", "ok");
+          location.href = paymentUrl;
+
+        } catch(err){
+          console.error(err);
+          showMsg("Server nicht erreichbar.", false);
+
+        } finally {
+          payBtn.disabled = false;
+          payBtn.textContent = oldText;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

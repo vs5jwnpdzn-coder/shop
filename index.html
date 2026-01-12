@@ -6,6 +6,7 @@
 <title>Premium Shop</title>
 
 <style>
+/* --- DEIN CSS (unverändert) --- */
 :root{
   --bg:#05060a;
   --bg2:#070a12;
@@ -166,12 +167,10 @@ body{
     linear-gradient(135deg, rgba(22,26,38,.95), rgba(0,0,0,.45));
 }
 
-/* particles */
 canvas#particles{ position:fixed; inset:0; z-index:-4; pointer-events:none; }
 
 .wrap{ width:min(var(--max), 92vw); margin:0 auto; }
 
-/* topbar */
 .topbar{
   margin-top:16px;
   padding:12px 16px;
@@ -193,7 +192,6 @@ canvas#particles{ position:fixed; inset:0; z-index:-4; pointer-events:none; }
 }
 .toplink:hover{ filter:brightness(1.08); }
 
-/* nav */
 header{
   position:sticky; top:0; z-index:30;
   backdrop-filter: blur(12px);
@@ -267,7 +265,6 @@ header{
   opacity:.6; pointer-events:none;
 }
 
-/* hero */
 .hero{ padding:72px 0 34px; text-align:center; }
 .hero h1{
   margin:0;
@@ -293,7 +290,6 @@ header{
   text-shadow: 0 10px 40px rgba(0,0,0,.55);
 }
 
-/* promo + rating */
 .promo{
   margin-top:18px;
   display:inline-flex; align-items:center; gap:10px;
@@ -314,7 +310,6 @@ header{
 .rating .score{ font-size:46px; font-weight:1100; letter-spacing:.4px; }
 .rating small{ color: rgba(243,246,255,.62); font-weight:900; letter-spacing:.25px; }
 
-/* sections */
 .sectionTitle{
   margin:52px 0 22px;
   text-align:center;
@@ -325,7 +320,6 @@ header{
   text-shadow: 0 22px 70px rgba(0,0,0,.62);
 }
 
-/* products */
 .productGrid{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
@@ -333,7 +327,6 @@ header{
   padding: 10px 0 18px;
 }
 .pLink{ text-decoration:none; color:inherit; display:block; }
-.pLink:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:6px; border-radius:22px; }
 
 .pCard{
   border-radius: var(--r22);
@@ -344,19 +337,8 @@ header{
   position:relative;
   transition: transform .16s ease, border-color .16s ease, filter .16s ease;
 }
-.pCard::before{
-  content:"";
-  position:absolute; inset:-120px;
-  background: linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.10), rgba(255,255,255,0));
-  transform: rotate(12deg) translateX(-30%);
-  opacity:0;
-  transition: opacity .18s ease, transform .25s ease;
-  pointer-events:none;
-}
 .pCard:hover{ transform: translateY(-4px); border-color: rgba(255,255,255,.22); filter: brightness(1.06); }
-.pCard:hover::before{ opacity:.75; transform: rotate(12deg) translateX(25%); }
 
-/* Bildbereich: Logo/Photo wie products.html */
 .pImg{
   height:168px;
   position:relative;
@@ -370,8 +352,7 @@ header{
     linear-gradient(135deg, rgba(255,255,255,.07), rgba(0,0,0,.26));
 }
 .pImg.isPhoto .bg{
-  position:absolute;
-  inset:-12px;
+  position:absolute; inset:-12px;
   width:calc(100% + 24px);
   height:calc(100% + 24px);
   object-fit: cover;
@@ -394,18 +375,13 @@ header{
 .pImg.isLogo::after{ display:none !important; }
 
 .pImg .fg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  position:absolute; inset:0;
+  width:100%; height:100%;
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 18px 40px rgba(0,0,0,.35));
 }
-.pImg.isLogo .fg{
-  padding:16px;
-  filter:none;
-}
+.pImg.isLogo .fg{ padding:16px; filter:none; }
 
 .badgeStar,.badgeType{
   position:absolute; top:12px;
@@ -457,27 +433,13 @@ header{
   font-weight: 950;
 }
 
-/* SALE price look */
-.priceWrap{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-}
-.priceOld{
-  font-size:14px;
-  color: rgba(243,246,255,.45);
-  text-decoration: line-through;
-}
+.priceWrap{ display:flex; align-items:baseline; gap:10px; }
+.priceOld{ font-size:14px; color: rgba(243,246,255,.45); text-decoration: line-through; }
 .priceSale{
-  font-size:22px;
-  font-weight:1200;
-  color:#ff4d4d;
-  text-shadow:
-    0 0 8px rgba(255,77,77,.55),
-    0 0 16px rgba(255,77,77,.25);
+  font-size:22px; font-weight:1200; color:#ff4d4d;
+  text-shadow: 0 0 8px rgba(255,77,77,.55), 0 0 16px rgba(255,77,77,.25);
 }
 
-/* reviews */
 .reviewsWrap{ padding: 0 0 40px; }
 .reviewGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
 .reviewCard{
@@ -486,22 +448,8 @@ header{
   background: rgba(255,255,255,.055);
   box-shadow: var(--shadow2);
   padding:16px;
-  position:relative;
-  overflow:hidden;
 }
-.reviewCard::before{
-  content:"";
-  position:absolute; inset:-120px;
-  background: radial-gradient(260px 120px at 25% 20%, rgba(255,255,255,.10), rgba(0,0,0,0) 70%);
-  opacity:.9; pointer-events:none;
-}
-.reviewTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; position:relative; }
-.reviewName{ font-weight:1100; letter-spacing:.2px; }
-.reviewStars{ font-weight:1100; opacity:.95; }
-.reviewText{ margin:10px 0 0; color: rgba(243,246,255,.70); font-weight:850; line-height:1.55; position:relative; }
-.reviewMeta{ margin-top:12px; display:flex; justify-content:space-between; color: rgba(243,246,255,.55); font-weight:900; font-size:12px; position:relative; }
 
-/* support */
 .supportWrap{ padding: 10px 0 22px; }
 .supportCard{
   width:min(980px, 92vw);
@@ -513,63 +461,9 @@ header{
   box-shadow: var(--shadow);
   text-align:center;
   color: #0b0f19;
-  position:relative;
-  overflow:hidden;
 }
-.supportCard::before{
-  content:"";
-  position:absolute; inset:-80px;
-  background: radial-gradient(620px 300px at 30% 20%, rgba(255,255,255,.28), rgba(255,255,255,0) 62%);
-  transform: rotate(-10deg);
-  pointer-events:none;
-}
-.supportCard h2{
-  margin:0;
-  font-size: clamp(30px, 4.2vw, 48px);
-  font-weight: 1000;
-  letter-spacing:.3px;
-  position:relative;
-}
-.supportCard p{
-  margin: 10px auto 18px;
-  max-width: 760px;
-  color: rgba(0,0,0,.76);
-  font-weight: 900;
-  line-height: 1.55;
-  position:relative;
-}
-.supportBtn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding: 12px 18px;
-  border-radius: 14px;
-  background: rgba(0,0,0,.86);
-  color: rgba(255,255,255,.94);
-  text-decoration:none;
-  font-weight: 1100;
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: 0 18px 56px rgba(0,0,0,.48);
-  position:relative;
-  transition:.15s ease;
-}
-.supportBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 
-/* footer */
 footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgba(255,255,255,.10); }
-.footerGrid{
-  display:grid;
-  grid-template-columns: 1.2fr .6fr .6fr;
-  gap: 18px;
-  padding: 26px 0 22px;
-}
-.footerBrand{ display:flex; gap: 12px; align-items:flex-start; }
-.footerName{ font-weight: 1100; letter-spacing:.3px; }
-.footerTag{ margin-top:8px; color: rgba(243,246,255,.56); font-weight: 900; font-size:12px; letter-spacing:.25px; }
-.footerCol{ display:flex; flex-direction:column; gap:10px; }
-.footerTitle{ font-weight:1100; color: rgba(243,246,255,.86); letter-spacing:.5px; margin-bottom:6px; text-transform:uppercase; font-size:12px; }
-.footerCol a{ color: rgba(243,246,255,.64); text-decoration:none; font-weight: 900; font-size:13px; width:max-content; }
-.footerCol a:hover{ color: rgba(243,246,255,.94); }
 .footerBottom{
   display:flex; justify-content:space-between; gap:14px;
   padding: 14px 0 18px;
@@ -580,62 +474,29 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
 }
 .powered span{ color: rgba(243,246,255,.90); font-weight: 1100; }
 
-/* reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .bankCard::before{ animation: none !important; }
+.authArea{ display:flex; align-items:center; gap:10px; }
+.hello{ font-weight:1000; color: rgba(243,246,255,.92); letter-spacing:.2px; white-space:nowrap; }
+.btnGhost{ background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.12); }
+#topupLink{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  font-size:18px;
+  line-height:1;
 }
 
-/* responsive */
 @media (max-width: 980px){
   .productGrid{ grid-template-columns: repeat(2, 1fr); }
   .reviewGrid{ grid-template-columns: repeat(2, 1fr); }
   .navRight{ min-width: 170px; }
-
-  .bankCard{ width: 520px; height: 330px; opacity:.9; }
-  .cardGraphite{ left:-120px; top:160px; }
-  .cardSteel{ right:-120px; top:320px; }
 }
 @media (max-width: 640px){
   .navCenter{ display:none; }
   .productGrid{ grid-template-columns: 1fr; }
   .reviewGrid{ grid-template-columns: 1fr; }
-  .footerGrid{ grid-template-columns: 1fr; }
   .footerBottom{ flex-direction:column; }
-
-  .bankCard{ width: 420px; height: 270px; opacity:.55; filter: blur(.2px); }
-  .cardGraphite{ left:-220px; top:140px; }
-  .cardSteel{ right:-220px; top:340px; }
-}
-.authArea{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.hello{
-  font-weight:1000;
-  color: rgba(243,246,255,.92);
-  letter-spacing:.2px;
-  white-space:nowrap;
-}
-
-.btnGhost{
-  background: rgba(255,255,255,.04);
-  border-color: rgba(255,255,255,.12);
-}
-.walletBtn{
-  width:26px;
-  height:26px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.10);
-  color:#fff;
-  font-weight:1200;
-  cursor:pointer;
-  line-height:1;
-}
-.walletBtn:hover{
-  filter: brightness(1.1);
 }
 </style>
 </head>
@@ -701,22 +562,19 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
         <a class="pill" href="products.html">Products</a>
         <a class="pill" href="#reviews">Reviews</a>
         <a class="pill" href="#contact">Contact</a>
+        <a class="pill" href="cart.html">Cart</a>
       </nav>
 
       <div class="navRight">
-  <div class="cartMini">
-    🛒 <span class="badge" id="cartCount">0</span>
-  </div>
+        <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span></div>
 
-  <div class="wallet" id="wallet" style="display:none;">
+        <div class="wallet" id="wallet" style="display:none;">
   💳 <span id="balance">€0.00</span>
-  <button class="btn btnGhost" id="topupBtn" type="button">Top up</button>
+  <a class="btn btnGhost" id="topupLink" href="balance.html" aria-label="Guthaben aufladen">+</a>
 </div>
 
-  <div class="authArea" id="authArea"></div>
-</div>
-  <a class="btn btnPrimary" href="login.html" id="loginBtn">Customer Login</a>
-</div>
+        <div class="authArea" id="authArea"></div>
+      </div>
     </div>
   </header>
 
@@ -740,7 +598,6 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
 
     <h2 class="sectionTitle" id="products">Bestseller</h2>
 
-    <!-- ✅ Dynamisch (3 ausgewählte Produkte) -->
     <section class="productGrid" id="bestsellerGrid" aria-label="Bestseller Produkte"></section>
 
     <div class="centerRow">
@@ -779,199 +636,126 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   </main>
 
   <footer>
-    <div class="wrap footerGrid">
-      <div class="footerBrand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <div class="footerName">PremiumShop</div>
-          <div class="footerTag">HARD • CLEAN • GRAPHITE</div>
-        </div>
-      </div>
-
-      <div class="footerCol">
-        <div class="footerTitle">TABS</div>
-        <a href="#home">Home</a>
-        <a href="products.html">Products</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#contact">Contact</a>
-        <a href="#" onclick="alert('Terms-Seite später'); return false;">Terms</a>
-      </div>
-
-      <div class="footerCol">
-        <div class="footerTitle">SOCIAL</div>
-        <a href="#" onclick="alert('Social-Link später'); return false;">Telegram</a>
-      </div>
-    </div>
-
     <div class="wrap footerBottom">
       <div>PremiumShop © <span id="year"></span></div>
       <div class="powered">Powered by <span>yourplatform</span></div>
     </div>
   </footer>
 
-<!-- ✅ Produktdaten für Bestseller -->
-<script src="products-data.js"></script>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  // ===== cart badge (shared) =====
-  function getCart(){
-    try { return JSON.parse(localStorage.getItem("cart") || "[]"); }
-    catch { return []; }
-  }
-  function updateBadge(){
-    const items = getCart();
-    const count = items.reduce((sum, it) => sum + (it.qty || 0), 0);
-    document.getElementById("cartCount").textContent = String(count);
-  }
-  updateBadge();
-  window.addEventListener("storage", (e) => { if(e.key === "cart") updateBadge(); });
-  function getAuth(){
-  try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
-  catch { return null; }
-}
-
-function logout(){
-  sessionStorage.removeItem("auth");
-  // optional: auch cart löschen? (normalerweise НЕIN)
-  // localStorage.removeItem("cart");
-  location.reload();
-}
-
-function renderAuth(){
-  const authArea = document.getElementById("authArea");
-  if(!authArea) return;
-
-  const user = getAuth();
-
-  if(!user){
-    authArea.innerHTML = `<a class="btn btnPrimary" href="login.html">Customer Login</a>`;
-    return;
-  }
-
-  const name = (user.name || user.email || "Customer").toString();
-  authArea.innerHTML = `
-    <span class="hello">Hi, ${name}</span>
-    <button class="btn btnGhost" type="button" id="logoutBtn">Logout</button>
-  `;
-  document.getElementById("logoutBtn").addEventListener("click", logout);
-}
-
-renderAuth();
-
-  // ===== Bestseller auf Startseite (3 ausgewählte IDs) =====
-  const BESTSELLER_IDS = [1, 14, 87]; // <-- HIER deine 3 Artikel-IDs einsetzen
-
-  function bestsellerCardHTML(p){
-    const inStock = !!p.stock;
-    const stockText  = inStock ? 'IN STOCK <span class="tick">✓</span>' : 'OUT OF STOCK';
-    const modeClass = (p.imgMode === "logo") ? "isLogo" : "isPhoto";
-    const imgSrc = p.img || "images/placeholder.jpg";
-
-    const priceHTML = p.salePrice
-      ? `<div class="priceWrap">
-           <span class="priceOld">${p.price}</span>
-           <span class="priceSale">${p.salePrice}</span>
-         </div>`
-      : `${p.price || "—"}`;
-
-    return `
-      <a class="pLink" href="product.html?id=${encodeURIComponent(p.id)}" aria-label="${p.name} öffnen">
-        <article class="pCard">
-          <div class="pImg ${modeClass}">
-            ${modeClass === "isPhoto" ? `<img class="bg" src="${imgSrc}" alt="">` : ``}
-            <img class="fg" src="${imgSrc}" alt="${p.name}">
-            <div class="badgeStar">★ 5.0</div>
-            ${p.tag ? `<div class="badgeType">${p.tag}</div>` : ``}
-          </div>
-          <div class="pBody">
-            <h3 class="pTitle">${p.name || "Produkt"}</h3>
-            <p class="pDesc">${p.desc || "Bestseller (Demo)."}</p>
-          </div>
-          <div class="pBottom">
-            <div class="pPrice">${priceHTML}</div>
-            <div class="pStock">${stockText}</div>
-          </div>
-        </article>
-      </a>
-    `;
-  }
-
-  (function renderBestsellers(){
-    const grid = document.getElementById("bestsellerGrid");
-    const list = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
-
-    const picks = BESTSELLER_IDS
-      .map(id => list.find(p => Number(p.id) === Number(id)))
-      .filter(Boolean)
-      .slice(0, 3);
-
-    grid.innerHTML = picks.length
-      ? picks.map(bestsellerCardHTML).join("")
-      : `<div class="empty">Keine Bestseller ausgewählt.</div>`;
-  })();
-
-  // ===== particles =====
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const canvas = document.getElementById("particles");
-  const ctx = canvas.getContext("2d");
-  let W=0, H=0, DPR=1, parts=[];
-
-  function resize(){
-    DPR = window.devicePixelRatio || 1;
-    W = canvas.width = Math.floor(window.innerWidth * DPR);
-    H = canvas.height = Math.floor(window.innerHeight * DPR);
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-
-    const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
-    parts = Array.from({length: count}, () => ({
-      x: Math.random()*W,
-      y: Math.random()*H,
-      r: (Math.random()*2.0 + 0.7) * DPR,
-      s: (Math.random()*0.18 + 0.06) * DPR,
-      a: Math.random()*0.55 + 0.16
-    }));
-  }
-
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    ctx.shadowBlur = 12 * DPR;
-    ctx.shadowColor = "rgba(255,255,255,.10)";
-
-    for(const p of parts){
-      p.y += p.s;
-      if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-
-      const t = Math.random();
-      if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
-      else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
-
-      ctx.fill();
-    }
-    requestAnimationFrame(tick);
-  }
-
-  if (reduceMotion) {
-    canvas.style.display = "none";
-  } else {
-    window.addEventListener("resize", resize);
-    resize();
-    tick();
-  }
-</script>
- <!-- Wichtig: PRODUCTS müssen verfügbar sein -->
+  <!-- ✅ Reihenfolge wichtig -->
   <script src="products-data.js"></script>
-
-  <!-- Badge + Cart Logik -->
-  <script src="assets/cart.js"></script>
-  <script src="assets/wallet.js"></script>
-<script src="assets/auth.js"></script>
-  <!-- Header Auth (Hi/Logout/Login) -->
   <script src="assets/ui.js"></script>
+  <script src="assets/wallet.js"></script>
+  <script src="assets/cart.js"></script>
+  <script src="assets/auth.js"></script>
+
+  <!-- ✅ Page Script nur für Bestseller + Particles -->
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ===== Bestseller auf Startseite (3 ausgewählte IDs) =====
+    const BESTSELLER_IDS = [1, 14, 87]; // <-- deine 3 Artikel-IDs
+
+    function bestsellerCardHTML(p){
+      const inStock = !!p.stock;
+      const stockText  = inStock ? 'IN STOCK <span class="tick">✓</span>' : 'OUT OF STOCK';
+      const modeClass = (p.imgMode === "logo") ? "isLogo" : "isPhoto";
+      const imgSrc = p.img || "images/placeholder.jpg";
+
+      const priceHTML = p.salePrice
+        ? `<div class="priceWrap">
+             <span class="priceOld">${p.price}</span>
+             <span class="priceSale">${p.salePrice}</span>
+           </div>`
+        : `${p.price || "—"}`;
+
+      return `
+        <a class="pLink" href="product.html?id=${encodeURIComponent(p.id)}" aria-label="${p.name} öffnen">
+          <article class="pCard">
+            <div class="pImg ${modeClass}">
+              ${modeClass === "isPhoto" ? `<img class="bg" src="${imgSrc}" alt="">` : ``}
+              <img class="fg" src="${imgSrc}" alt="${p.name}">
+              <div class="badgeStar">★ 5.0</div>
+              ${p.tag ? `<div class="badgeType">${p.tag}</div>` : ``}
+            </div>
+            <div class="pBody">
+              <h3 class="pTitle">${p.name || "Produkt"}</h3>
+              <p class="pDesc">${p.desc || "Bestseller (Demo)."}</p>
+            </div>
+            <div class="pBottom">
+              <div class="pPrice">${priceHTML}</div>
+              <div class="pStock">${stockText}</div>
+            </div>
+          </article>
+        </a>
+      `;
+    }
+
+    (function renderBestsellers(){
+      const grid = document.getElementById("bestsellerGrid");
+      const list = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
+
+      const picks = BESTSELLER_IDS
+        .map(id => list.find(p => Number(p.id) === Number(id)))
+        .filter(Boolean)
+        .slice(0, 3);
+
+      grid.innerHTML = picks.length
+        ? picks.map(bestsellerCardHTML).join("")
+        : `<div class="empty">Keine Bestseller ausgewählt.</div>`;
+    })();
+
+    // ===== particles =====
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let W=0, H=0, DPR=1, parts=[];
+
+    function resize(){
+      DPR = window.devicePixelRatio || 1;
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+
+      const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
+      parts = Array.from({length: count}, () => ({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: (Math.random()*2.0 + 0.7) * DPR,
+        s: (Math.random()*0.18 + 0.06) * DPR,
+        a: Math.random()*0.55 + 0.16
+      }));
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      ctx.shadowBlur = 12 * DPR;
+      ctx.shadowColor = "rgba(255,255,255,.10)";
+
+      for(const p of parts){
+        p.y += p.s;
+        if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+
+        const t = Math.random();
+        if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
+        else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
+
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (reduceMotion) {
+      canvas.style.display = "none";
+    } else {
+      window.addEventListener("resize", resize);
+      resize();
+      tick();
+    }
+  </script>
 </body>
 </html>

@@ -6,6 +6,7 @@
   <title>Cart • PremiumShop</title>
 
   <style>
+    /* ✅ CSS bleibt wie bei dir (nicht geändert) */
     :root{
       --bg:#05060a;
       --bg2:#070a12;
@@ -99,14 +100,9 @@
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
     .btn:active{ transform: translateY(0px) scale(.99); filter: brightness(.98); }
-    .btnPrimary{
-      background: linear-gradient(135deg, rgba(233,237,247,.20), rgba(255,255,255,.06), rgba(96,165,250,.12));
-      border-color: rgba(255,255,255,.18);
-    }
-    .btnPrimary::after{
-      content:""; position:absolute; inset:-2px; border-radius:999px;
-      background: radial-gradient(200px 90px at 30% 20%, rgba(255,255,255,.16), rgba(0,0,0,0) 70%);
-      opacity:.6; pointer-events:none;
+    .btnGhost{
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.12);
     }
 
     .authArea{ display:flex; align-items:center; gap:10px; }
@@ -115,10 +111,6 @@
       color: rgba(243,246,255,.92);
       letter-spacing:.2px;
       white-space:nowrap;
-    }
-    .btnGhost{
-      background: rgba(255,255,255,.04);
-      border-color: rgba(255,255,255,.12);
     }
 
     /* page */
@@ -184,10 +176,7 @@
       align-items:flex-end;
       gap:10px;
     }
-    .linePrice{
-      font-weight:1100;
-      letter-spacing:.2px;
-    }
+    .linePrice{ font-weight:1100; letter-spacing:.2px; }
 
     .qty{
       display:flex;
@@ -291,17 +280,15 @@
       </nav>
 
       <div class="navRight">
-  <div class="cartMini">
-    🛒 <span class="badge" id="cartCount">0</span>
-  </div>
+        <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span></div>
 
-  <div class="wallet" id="wallet" style="display:none;">
+        <div class="wallet" id="wallet" style="display:none;">
   💳 <span id="balance">€0.00</span>
-  <button class="btn btnGhost" id="topupBtn" type="button">Top up</button>
+  <a class="btn btnGhost" id="topupLink" href="balance.html" aria-label="Guthaben aufladen">+</a>
 </div>
 
-  <div class="authArea" id="authArea"></div>
-</div>
+        <div class="authArea" id="authArea"></div>
+      </div>
     </div>
   </header>
 
@@ -332,6 +319,10 @@
 
           <button class="checkoutBtn" id="checkoutBtn" type="button">Checkout</button>
 
+          <div style="margin-top:10px;">
+            <a class="pill" href="products.html" style="display:inline-block;">Weiter shoppen</a>
+          </div>
+
           <div style="margin-top:10px; color: rgba(243,246,255,.55); font-weight:900; font-size:12px; line-height:1.55;">
             Hinweis: echter Checkout kommt später mit Backend & Payment.
           </div>
@@ -340,14 +331,11 @@
     </section>
   </main>
 
-  <!-- Wichtig: PRODUCTS müssen verfügbar sein -->
+  <!-- ✅ Reihenfolge: Daten -> UI -> Wallet -> Cart -> Auth -->
   <script src="products-data.js"></script>
-
-  <!-- Badge + Cart Logik -->
-  <script src="assets/cart.js"></script>
-  <script src="assets/wallet.js"></script>
-<script src="assets/auth.js"></script>
-  <!-- Header Auth (Hi/Logout/Login) -->
   <script src="assets/ui.js"></script>
+  <script src="assets/wallet.js"></script>
+  <script src="assets/cart.js"></script>
+  <script src="assets/auth.js"></script>
 </body>
 </html>

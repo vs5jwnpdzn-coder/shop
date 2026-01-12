@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cancelled • PremiumShop</title>
   <style>
-    body{margin:0;font-family:system-ui;color:#f4f6ff;background:#05060a}
+    body{margin:0;font-family:system-ui;background:#05060a;color:#f4f6ff}
     .wrap{width:min(900px,92vw);margin:40px auto}
     .card{padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
     a{color:#fff}
@@ -14,10 +14,17 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Payment abgebrochen</h1>
-      <p>Du kannst es jederzeit erneut versuchen.</p>
-      <p><a href="cart.html">Zurück zum Cart</a></p>
+      <h1>Zahlung abgebrochen ✖</h1>
+      <p id="msg">Du kannst es jederzeit erneut versuchen.</p>
+      <p><a href="balance.html">Zur Balance</a> • <a href="cart.html">Zum Cart</a></p>
     </div>
   </div>
+  <script>
+    const p = new URLSearchParams(location.search);
+    const topupId = p.get("topupId");
+    if(topupId){
+      document.getElementById("msg").textContent = "Top-up wurde abgebrochen (ID: " + topupId + ").";
+    }
+  </script>
 </body>
 </html>

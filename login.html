@@ -61,14 +61,10 @@
       font-size: 13px;
       letter-spacing:.25px;
       box-shadow: 0 14px 34px rgba(0,0,0,.26);
+      color: rgba(255,255,255,.95);
     }
-    .pill{
-  color: rgba(255,255,255,.95);
-}
-    .pill:hover{ filter: brightness(1.06); }
-.pill:hover{
-  color:#fff;
-}
+    .pill:hover{ filter: brightness(1.06); color:#fff; }
+
     .card{
       width:min(520px, 100%);
       margin: 46px auto 0;
@@ -121,6 +117,7 @@
       transition:.15s ease;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
 
     .hint{
       margin-top: 12px;
@@ -156,19 +153,17 @@
         <div class="logo" aria-hidden="true"></div>
         <div class="brandText">
           <b>PremiumShop</b>
-          <small>Store • Membership • Service</small>
+          <small>Store • Membership</small>
         </div>
       </div>
-      <a class="pill" href="index.html">← Back to Home</a>
+      <a class="pill" href="index.html">← Home</a>
     </div>
   </header>
 
   <main class="wrap">
     <section class="card" aria-label="Login">
       <h1>Customer Login</h1>
-      <p class="sub">
-        Demo-Login (ohne Backend). Später ersetzen wir das durch echten Login (DB + Sessions).
-      </p>
+      <p class="sub">Demo-Login mit Server-Session (Cookie).</p>
 
       <form id="loginForm" autocomplete="on">
         <div class="row">
@@ -181,49 +176,83 @@
           <input id="password" name="password" type="password" placeholder="••••••••" required />
         </div>
 
-        <button class="btn" type="submit">Login</button>
+        <button class="btn" id="loginBtn" type="submit">Login</button>
 
         <div id="msg" class="msg"></div>
 
         <div class="hint">
-          <b>Demo Zugang:</b> email: <code>demo@shop.com</code> • pass: <code>demo1234</code><br>
-          Hinweis: Für echten Shop bitte <b>kein</b> Passwort im Frontend prüfen – das muss serverseitig passieren.
+          <b>Demo Zugang:</b> <code>demo@shop.com</code> • <code>demo1234</code><br>
+          (Passwörter in echt nur serverseitig prüfen.)
         </div>
       </form>
     </section>
   </main>
 
   <script>
-    const params = new URLSearchParams(location.search);
-const nextPage = params.get("next") || "index.html";
+(() => {
+  "use strict";
+
   const DEMO_EMAIL = "demo@shop.com";
   const DEMO_PASS  = "demo1234";
 
-  const next = new URLSearchParams(location.search).get("next") || "index.html";
-
-  function setSession(user){
-    sessionStorage.setItem("auth", JSON.stringify(user));
-  }
   function showMsg(text, ok){
     const el = document.getElementById("msg");
+    if(!el) return;
     el.textContent = text;
     el.className = "msg " + (ok ? "ok" : "error");
     el.style.display = "block";
   }
 
-  document.getElementById("loginForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value.trim();
-    const pass  = document.getElementById("password").value;
+  async function apiLogin(email, password){
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  }
 
-    if(email.toLowerCase() === DEMO_EMAIL && pass === DEMO_PASS){
-      setSession({ email, name: "Demo Customer" });
-      showMsg("Login erfolgreich. Weiterleitung…", true);
-      setTimeout(() => location.href = nextPage, 550);
-    } else {
-      showMsg("Login fehlgeschlagen. Prüfe E-Mail/Passwort (Demo).", false);
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("loginForm");
+    if(!form){
+      console.error("loginForm nicht gefunden");
+      return;
     }
+
+    const params = new URLSearchParams(location.search);
+    const nextPage = params.get("next") || "index.html";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = (document.getElementById("email")?.value || "").trim();
+      const pass  = (document.getElementById("password")?.value || "");
+
+      // optional: quick hint, falls du dich vertippst
+      if(email && pass && (email.toLowerCase() !== DEMO_EMAIL || pass !== DEMO_PASS)){
+        // trotzdem API probieren (Server ist Quelle der Wahrheit)
+      }
+
+      try{
+        const r = await apiLogin(email, pass);
+
+        if(r.ok){
+          try { sessionStorage.setItem("ps_user", JSON.stringify(r.data?.user || null)); } catch {}
+          showMsg("Login erfolgreich. Weiterleitung…", true);
+          setTimeout(() => { location.href = nextPage; }, 350);
+          return;
+        }
+
+        showMsg("Login fehlgeschlagen. Prüfe E-Mail/Passwort.", false);
+      }catch(err){
+        console.error(err);
+        showMsg("Server nicht erreichbar / Fehler beim Login.", false);
+      }
+    });
   });
+})();
 </script>
 </body>
 </html>

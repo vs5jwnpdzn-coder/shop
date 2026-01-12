@@ -1,5 +1,7 @@
-window.PRODUCTS = [
-    {
+// products-data.js
+(function(root){
+  const PRODUCTS = [{
+    // ... DEINE PRODUKTE HIER ...
       id:1, 
       name:"PAYPAL LOGIN 500€ BALANCE", 
       price:"€50.00",
@@ -1249,5 +1251,13 @@ window.PRODUCTS = [
       "Direkt startklar"
     ]
     },
-    
     ];
+
+  // Browser
+  root.PRODUCTS = PRODUCTS;
+
+  // Node (CommonJS)
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = PRODUCTS;
+  }
+})(typeof window !== "undefined" ? window : global);
