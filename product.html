@@ -461,217 +461,210 @@ footer{
     </div>
   </footer>
 
-  <!-- Reihenfolge ist wichtig -->
-  <script src="products-data.js"></script>
-  <script src="cart.js"></script>
-  <script src="auth.js"></script>
+ 
+ <!-- Daten zuerst -->
+<script src="products-data.js"></script>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+<!-- shared helpers -->
+<script src="assets/cart.js"></script>
+<script src="assets/auth.js"></script>
+<script src="assets/ui.js"></script>
 
-    // Toast helper: nutzt cart.js showToast, fallback wenn cart.js nicht da
-    function toast(msg){
-      if(typeof window.showToast === "function") { window.showToast(msg); return; }
-      // fallback mini-toast
-      const d = document.createElement("div");
-      d.style.cssText = `
-        position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-        padding:10px 12px;border-radius:14px;
-        border:1px solid rgba(255,255,255,.14);
-        background:rgba(10,12,18,.78);
-        color:rgba(243,246,255,.95);
-        font-weight:950;letter-spacing:.2px;
-        box-shadow:0 18px 56px rgba(0,0,0,.48);
-        backdrop-filter:blur(10px);
-        z-index:9999;
-      `;
-      d.textContent = msg;
-      document.body.appendChild(d);
-      setTimeout(() => d.remove(), 1400);
-    }
+<!-- product-page code -->
+<<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Badge direkt updaten
-    if(typeof window.updateBadge === "function") window.updateBadge();
+  // Badge
+  if (typeof window.updateBadge === "function") window.updateBadge();
 
-    // ===== Produkt per URL laden =====
-    const params = new URLSearchParams(location.search);
-    const id = Number(params.get("id") || "0");
+  // ===== Produkt per URL laden =====
+  const params = new URLSearchParams(location.search);
+  const id = Number(params.get("id") || "0");
 
-    const list = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
-    const product = list.find(p => Number(p.id) === id);
+  const list = Array.isArray(window.PRODUCTS) ? window.PRODUCTS : [];
+  const product = list.find(p => Number(p.id) === id);
 
-    // UI refs
-    const titleEl = document.getElementById("title");
-    const crumbEl = document.getElementById("crumbName");
-    const descEl  = document.getElementById("desc");
-    const tagEl   = document.getElementById("tag");
-    const priceEl = document.getElementById("price");
-    const stockEl = document.getElementById("stock");
-    const bulletsEl = document.getElementById("bullets");
-    const previewTop = document.getElementById("previewTop");
-    const previewImg = document.getElementById("previewImg");
-    const addBtn = document.getElementById("addBtn");
-    const qtyBox = document.getElementById("qtyBox");
+  // UI refs
+  const titleEl = document.getElementById("title");
+  const crumbEl = document.getElementById("crumbName");
+  const descEl  = document.getElementById("desc");
+  const tagEl   = document.getElementById("tag");
+  const priceEl = document.getElementById("price");
+  const stockEl = document.getElementById("stock");
+  const bulletsEl = document.getElementById("bullets");
+  const previewTop = document.getElementById("previewTop");
+  const previewImg = document.getElementById("previewImg");
+  const addBtn = document.getElementById("addBtn");
+  const qtyBox = document.getElementById("qtyBox");
 
-    function renderNotFound(){
-      document.title = `Produkt nicht gefunden • PremiumShop`;
-      crumbEl.textContent = "Not found";
-      titleEl.textContent = "Produkt nicht gefunden";
-      descEl.textContent = "Bitte geh zurück zur Produktübersicht.";
-      priceEl.textContent = "—";
-      stockEl.textContent = "—";
-      tagEl.style.display = "none";
-      previewImg.src = "images/placeholder.jpg";
-      previewImg.alt = "Platzhalter";
-      bulletsEl.innerHTML = `<li>Kein Produkt mit dieser ID gefunden.</li>`;
-      addBtn.disabled = true;
-      if(qtyBox) qtyBox.classList.add("disabled");
-    }
+  // qty elements
+  const qtyEl = document.getElementById("qty");
+  const minus = document.getElementById("minus");
+  const plus  = document.getElementById("plus");
 
-    if(!product){
-      renderNotFound();
+  function toast(msg, type="ok"){
+    if(typeof window.showToast === "function") return window.showToast(msg, type);
+    alert(msg); // fallback
+  }
+
+  function renderNotFound(){
+    document.title = `Produkt nicht gefunden • PremiumShop`;
+    crumbEl.textContent = "Not found";
+    titleEl.textContent = "Produkt nicht gefunden";
+    descEl.textContent = "Bitte geh zurück zur Produktübersicht.";
+    priceEl.textContent = "—";
+    stockEl.textContent = "—";
+    tagEl.style.display = "none";
+    previewImg.src = "images/placeholder.jpg";
+    previewImg.alt = "Platzhalter";
+    bulletsEl.innerHTML = `<li>Kein Produkt mit dieser ID gefunden.</li>`;
+    addBtn.disabled = true;
+    qtyBox?.classList.add("disabled");
+  }
+
+  if(!product){
+    renderNotFound();
+  } else {
+    const inStock = !!product.stock;
+
+    // Header texts
+    document.title = `${product.name} • PremiumShop`;
+    crumbEl.textContent = product.name;
+    titleEl.textContent = product.name;
+    descEl.textContent = product.desc || "Details folgen (Demo).";
+
+    // Tag
+    if(product.tag){
+      tagEl.textContent = product.tag;
+      tagEl.style.display = "inline-flex";
     } else {
-      // header texts
-      document.title = `${product.name} • PremiumShop`;
-      crumbEl.textContent = product.name;
-      titleEl.textContent = product.name;
-      descEl.textContent = product.desc || "Details folgen (Demo).";
+      tagEl.style.display = "none";
+    }
 
-      // tag
-      if(product.tag){
-        tagEl.textContent = product.tag;
-        tagEl.style.display = "inline-flex";
-      } else {
-        tagEl.style.display = "none";
-      }
+    // Price (sale optional)
+    if(product.salePrice){
+      priceEl.innerHTML = `
+        <div class="priceWrap">
+          <span class="priceOld">${product.price}</span>
+          <span class="priceSale">${product.salePrice}</span>
+        </div>
+      `;
+    } else {
+      priceEl.textContent = product.price || "—";
+    }
 
-      // price (sale optional)
-      if(product.salePrice){
-        priceEl.innerHTML = `
-          <div class="priceWrap">
-            <span class="priceOld">${product.price}</span>
-            <span class="priceSale">${product.salePrice}</span>
-          </div>
-        `;
-      } else {
-        priceEl.textContent = product.price || "—";
-      }
+    // Stock text
+    stockEl.innerHTML = inStock
+      ? 'IN STOCK <span class="tick">✓</span>'
+      : 'OUT OF STOCK';
 
-      // stock + disable states
-      const inStock = !!product.stock;
-      stockEl.innerHTML = inStock
-        ? 'IN STOCK <span class="tick">✓</span>'
-        : 'OUT OF STOCK';
+    // Disable states
+    if(!inStock){
+      addBtn.disabled = true;
+      addBtn.textContent = "Out of stock";
+      qtyBox?.classList.add("disabled");
+    }
 
+    // Image
+    const imgSrc = product.img || "images/placeholder.jpg";
+    previewImg.src = imgSrc;
+    previewImg.alt = product.name || "Product";
+
+    if(product.imgMode === "logo"){
+      previewTop.classList.add("white");
+      previewImg.style.padding = "22px";
+    }
+
+    // Bullets
+    const bullets = Array.isArray(product.bullets) && product.bullets.length
+      ? product.bullets
+      : ["Schnelle Abwicklung (Demo)", "Premium Design", "Backend folgt"];
+    bulletsEl.innerHTML = bullets.map(x => `<li>${String(x)}</li>`).join("");
+
+    // Qty logic
+    let qty = 1;
+    function setQty(n){
+      qty = Math.max(1, Math.min(99, n));
+      qtyEl.textContent = String(qty);
+    }
+    minus.addEventListener("click", () => setQty(qty - 1));
+    plus.addEventListener("click",  () => setQty(qty + 1));
+
+    // Add to cart (nutzt cart.js wenn vorhanden)
+    addBtn.addEventListener("click", () => {
       if(!inStock){
-        addBtn.disabled = true;
-        addBtn.textContent = "Out of stock";
-        if(qtyBox) qtyBox.classList.add("disabled");
+        toast("Out of stock", "error");
+        return;
       }
 
-      // image
-      const imgSrc = product.img || "images/placeholder.jpg";
-      previewImg.src = imgSrc;
-      previewImg.alt = product.name || "Product";
-      if(product.imgMode === "logo"){
-        previewTop.classList.add("white");
-        previewImg.style.padding = "22px";
-      }
-
-      // bullets
-      const bullets = Array.isArray(product.bullets) && product.bullets.length
-        ? product.bullets
-        : ["Schnelle Abwicklung (Demo)", "Premium Design", "Backend folgt"];
-
-      bulletsEl.innerHTML = bullets.map(x => `<li>${String(x)}</li>`).join("");
-
-      // qty
-      let qty = 1;
-      const qtyEl = document.getElementById("qty");
-      const minus = document.getElementById("minus");
-      const plus  = document.getElementById("plus");
-
-      function setQty(n){
-        qty = Math.max(1, Math.min(99, n));
-        qtyEl.textContent = String(qty);
-      }
-      minus.addEventListener("click", () => setQty(qty - 1));
-      plus.addEventListener("click",  () => setQty(qty + 1));
-
-      // add to cart (nutzt localStorage cart)
-      addBtn.addEventListener("click", () => {
-        if(!inStock){
-          toast("Out of stock");
-          return;
-        }
-
-        // cart array
+      if(typeof window.addToCart === "function"){
+        window.addToCart(product.id, qty);
+      } else {
+        // fallback
         let items = [];
-        try { items = JSON.parse(localStorage.getItem("cart") || "[]"); }
-        catch { items = []; }
-
+        try { items = JSON.parse(localStorage.getItem("cart") || "[]"); } catch {}
         const idx = items.findIndex(x => Number(x.id) === Number(product.id));
         if(idx >= 0) items[idx].qty = (Number(items[idx].qty || 0) + qty);
         else items.push({ id: Number(product.id), qty });
-
         localStorage.setItem("cart", JSON.stringify(items));
-
         if(typeof window.updateBadge === "function") window.updateBadge();
-        toast(`${qty}× ${product.name} added to cart`);
-      });
-    }
-
-    // ===== particles =====
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const canvas = document.getElementById("particles");
-    const ctx = canvas.getContext("2d");
-    let W=0, H=0, DPR=1, parts=[];
-
-    function resize(){
-      DPR = window.devicePixelRatio || 1;
-      W = canvas.width = Math.floor(window.innerWidth * DPR);
-      H = canvas.height = Math.floor(window.innerHeight * DPR);
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-
-      const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
-      parts = Array.from({length: count}, () => ({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        r: (Math.random()*2.0 + 0.7) * DPR,
-        s: (Math.random()*0.18 + 0.06) * DPR,
-        a: Math.random()*0.55 + 0.16
-      }));
-    }
-
-    function tick(){
-      ctx.clearRect(0,0,W,H);
-      ctx.shadowBlur = 12 * DPR;
-      ctx.shadowColor = "rgba(255,255,255,.10)";
-
-      for(const p of parts){
-        p.y += p.s;
-        if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-
-        const t = Math.random();
-        if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
-        else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
-
-        ctx.fill();
       }
-      requestAnimationFrame(tick);
-    }
 
-    if (reduceMotion) {
-      canvas.style.display = "none";
-    } else {
-      window.addEventListener("resize", resize);
-      resize();
-      tick();
+      toast(`${qty}× ${product.name} added to cart`, "ok");
+    });
+  }
+
+  // ===== particles =====
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+  let W=0, H=0, DPR=1, parts=[];
+
+  function resize(){
+    DPR = window.devicePixelRatio || 1;
+    W = canvas.width = Math.floor(window.innerWidth * DPR);
+    H = canvas.height = Math.floor(window.innerHeight * DPR);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    const count = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9800));
+    parts = Array.from({length: count}, () => ({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: (Math.random()*2.0 + 0.7) * DPR,
+      s: (Math.random()*0.18 + 0.06) * DPR,
+      a: Math.random()*0.55 + 0.16
+    }));
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    ctx.shadowBlur = 12 * DPR;
+    ctx.shadowColor = "rgba(255,255,255,.10)";
+
+    for(const p of parts){
+      p.y += p.s;
+      if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+
+      const t = Math.random();
+      if (t < 0.07) ctx.fillStyle = `rgba(96,165,250,${p.a * 0.30})`;
+      else ctx.fillStyle = `rgba(235,238,255,${p.a})`;
+
+      ctx.fill();
     }
-  </script>
+    requestAnimationFrame(tick);
+  }
+
+  if (reduceMotion) {
+    canvas.style.display = "none";
+  } else {
+    window.addEventListener("resize", resize);
+    resize();
+    tick();
+  }
+</script>
 </body>
 </html>

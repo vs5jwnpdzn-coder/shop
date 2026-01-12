@@ -1,4 +1,4 @@
-// auth.js
+// assets/auth.js
 (function(){
   function getAuth(){
     try { return JSON.parse(sessionStorage.getItem("auth") || "null"); }
@@ -26,14 +26,13 @@
       <span class="hello">Hi, ${name}</span>
       <button class="btn btnGhost" type="button" id="logoutBtn">Logout</button>
     `;
-
-    const btn = document.getElementById("logoutBtn");
-    if(btn) btn.addEventListener("click", logout);
+    const b = document.getElementById("logoutBtn");
+    if(b) b.addEventListener("click", logout);
   }
 
-  // Exports (optional)
+  document.addEventListener("DOMContentLoaded", renderAuth);
+
+  // optional exports
   window.getAuth = getAuth;
   window.renderAuth = renderAuth;
-
-  document.addEventListener("DOMContentLoaded", renderAuth);
 })();

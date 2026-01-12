@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Success • PremiumShop</title>
+  <style>
+    body{margin:0;font-family:system-ui;color:#f4f6ff;background:#05060a}
+    .wrap{width:min(900px,92vw);margin:40px auto}
+    .card{padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+    a{color:#fff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Payment erfolgreich ✅</h1>
+      <p id="msg">Danke! (Demo)</p>
+      <p><a href="cart.html">Zurück zum Cart</a> • <a href="products.html">Weiter shoppen</a></p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const paid = params.get("paid");
+    if(paid === "1"){
+      document.getElementById("msg").textContent =
+        "Demo: Zahlung bestätigt. Später kommt hier die echte Bestätigung über Webhook.";
+    } else {
+      document.getElementById("msg").textContent =
+        "Hinweis: Keine Zahlungsinfo gefunden.";
+    }
+  </script>
+</body>
+</html>
