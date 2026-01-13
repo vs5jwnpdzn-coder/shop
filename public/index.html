@@ -646,6 +646,12 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   header{ position:sticky; }
   .navRow{ position:relative; }
 }
+@media (max-width: 640px){
+  .navCenter{ display:none; }
+  .brand{ min-width: 0; }
+  .navRight{ min-width: 0; }
+  .brandText small{ display:none; }
+}
 </style>
 </head>
 
@@ -696,46 +702,32 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   </div>
 
   <header>
-    <div class="wrap navRow">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div class="brandText">
-          <b>PremiumShop</b>
-          <small>Store • Membership • Service</small>
-        </div>
-      </div>
-
-      <!-- Desktop Nav bleibt -->
-<nav class="navCenter" aria-label="Navigation">
-  <a class="pill active" href="#home">Home</a>
-  <a class="pill" href="products.html">Products</a>
-  <a class="pill" href="#reviews">Reviews</a>
-  <a class="pill" href="#contact">Contact</a>
-</nav>
-
-<!-- ✅ Mobile Burger -->
-<button class="burger" id="burgerBtn" aria-label="Menü öffnen" aria-controls="mobileMenu" aria-expanded="false">
-  ☰
-</button>
-
-<div class="mobileMenu" id="mobileMenu" aria-hidden="true">
-  <a class="pill" href="#home">Home</a>
-  <a class="pill" href="products.html">Products</a>
-  <a class="pill" href="#reviews">Reviews</a>
-  <a class="pill" href="#contact">Contact</a>
-</div>
-
-      <div class="navRight">
-        <!-- ✅ Balance + Plus zusammen -->
-        <a href="balance.html" class="balancePill" aria-label="Balance aufladen">
-          <span class="balanceAmount" id="balance">€0.00</span>
-          <span class="balancePlus" aria-hidden="true">+</span>
-        </a>
-
-        <div class="authArea" id="authArea"></div>
+  <div class="wrap navRow">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="brandText">
+        <b>PremiumShop</b>
+        <small>Store • Membership • Service</small>
       </div>
     </div>
-  </header>
+
+    <nav class="navCenter" aria-label="Navigation">
+      <a class="pill active" href="#home">Home</a>
+      <a class="pill" href="products.html">Products</a>
+      <a class="pill" href="#reviews">Reviews</a>
+      <a class="pill" href="#contact">Contact</a>
+    </nav>
+
+    <div class="navRight">
+      <a href="balance.html" class="balancePill" aria-label="Balance aufladen">
+        <span class="balanceAmount" id="balance">€0.00</span>
+        <span class="balancePlus" aria-hidden="true">+</span>
+      </a>
+
+      <div class="authArea" id="authArea"></div>
+    </div>
+  </div>
+</header>
 
   <main class="wrap" id="home">
     <section class="hero">
@@ -916,35 +908,5 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
       tick();
     }
   </script>
-  <script>
-  (function(){
-    const btn = document.getElementById("burgerBtn");
-    const menu = document.getElementById("mobileMenu");
-    if(!btn || !menu) return;
-
-    function close(){
-      menu.classList.remove("open");
-      btn.setAttribute("aria-expanded","false");
-      menu.setAttribute("aria-hidden","true");
-    }
-
-    btn.addEventListener("click", () => {
-      const open = menu.classList.toggle("open");
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-      menu.setAttribute("aria-hidden", open ? "false" : "true");
-    });
-
-    // Klick auf Link -> Menü schließen
-    menu.addEventListener("click", (e) => {
-      if(e.target.closest("a")) close();
-    });
-
-    // Klick außerhalb -> schließen
-    document.addEventListener("click", (e) => {
-      if(e.target.closest("#mobileMenu") || e.target.closest("#burgerBtn")) return;
-      close();
-    });
-  })();
-</script>
 </body>
 </html>
