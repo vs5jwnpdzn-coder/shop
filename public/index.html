@@ -586,6 +586,62 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   .balanceAmount{ font-size:12.5px; }
   .balancePlus{ width:20px; height:20px; font-size:13px; }
 }
+/* ✅ Burger standard: versteckt am Desktop */
+.burger{ display:none; }
+
+/* ✅ Mobile Menu standard: versteckt */
+.mobileMenu{ display:none; }
+
+@media (max-width: 760px){
+  /* Desktop Nav ausblenden */
+  .navCenter{ display:none; }
+
+  /* Burger anzeigen */
+  .burger{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    color: rgba(243,246,255,.95);
+    font-weight:1100;
+    cursor:pointer;
+    box-shadow: 0 14px 34px rgba(0,0,0,.26);
+  }
+
+  /* Overlay Menü */
+  .mobileMenu{
+    position:absolute;
+    top:64px;              /* unter Header-Reihe */
+    right: 4vw;
+    width: min(320px, 92vw);
+    padding: 12px;
+    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(10,12,18,.88);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 22px 70px rgba(0,0,0,.62);
+    display:none;
+    flex-direction:column;
+    gap:10px;
+    z-index:999;
+  }
+
+  .mobileMenu.open{ display:flex; }
+
+  /* Pills im Menü etwas breiter/komfortabler */
+  .mobileMenu .pill{
+    display:flex;
+    justify-content:center;
+  }
+
+  /* Header muss relative sein, damit Menu “drunter” sitzt */
+  header{ position:sticky; }
+  .navRow{ position:relative; }
+}
 </style>
 </head>
 
@@ -645,13 +701,25 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
         </div>
       </div>
 
-      <nav class="navCenter" aria-label="Navigation">
-        <a class="pill active" href="#home">Home</a>
-        <a class="pill" href="products.html">Products</a>
-        <a class="pill" href="#reviews">Reviews</a>
-        <a class="pill" href="#contact">Contact</a>
-        <!-- ✅ Cart-Link entfernt -->
-      </nav>
+      <!-- Desktop Nav bleibt -->
+<nav class="navCenter" aria-label="Navigation">
+  <a class="pill active" href="#home">Home</a>
+  <a class="pill" href="products.html">Products</a>
+  <a class="pill" href="#reviews">Reviews</a>
+  <a class="pill" href="#contact">Contact</a>
+</nav>
+
+<!-- ✅ Mobile Burger -->
+<button class="burger" id="burgerBtn" aria-label="Menü öffnen" aria-controls="mobileMenu" aria-expanded="false">
+  ☰
+</button>
+
+<div class="mobileMenu" id="mobileMenu" aria-hidden="true">
+  <a class="pill" href="#home">Home</a>
+  <a class="pill" href="products.html">Products</a>
+  <a class="pill" href="#reviews">Reviews</a>
+  <a class="pill" href="#contact">Contact</a>
+</div>
 
       <div class="navRight">
         <!-- ✅ Balance + Plus zusammen -->
@@ -844,5 +912,35 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
       tick();
     }
   </script>
+  <script>
+  (function(){
+    const btn = document.getElementById("burgerBtn");
+    const menu = document.getElementById("mobileMenu");
+    if(!btn || !menu) return;
+
+    function close(){
+      menu.classList.remove("open");
+      btn.setAttribute("aria-expanded","false");
+      menu.setAttribute("aria-hidden","true");
+    }
+
+    btn.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      menu.setAttribute("aria-hidden", open ? "false" : "true");
+    });
+
+    // Klick auf Link -> Menü schließen
+    menu.addEventListener("click", (e) => {
+      if(e.target.closest("a")) close();
+    });
+
+    // Klick außerhalb -> schließen
+    document.addEventListener("click", (e) => {
+      if(e.target.closest("#mobileMenu") || e.target.closest("#burgerBtn")) return;
+      close();
+    });
+  })();
+</script>
 </body>
 </html>
