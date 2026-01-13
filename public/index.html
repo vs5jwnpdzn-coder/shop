@@ -6,7 +6,7 @@
 <title>Premium Shop</title>
 
 <style>
-/* --- DEIN CSS (unverändert) --- */
+/* --- DEIN CSS (unverändert + MOBILE OPTIMIERUNG am Ende) --- */
 :root{
   --bg:#05060a;
   --bg2:#070a12;
@@ -232,14 +232,6 @@ header{
 .pill.active{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
 
 .navRight{ display:flex; align-items:center; justify-content:flex-end; gap:10px; min-width:250px; }
-.cartMini{ display:flex; align-items:center; gap:8px; font-weight:1000; }
-.badge{
-  min-width:30px; height:30px; border-radius:999px;
-  display:grid; place-items:center;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.14);
-  box-shadow: 0 12px 30px rgba(0,0,0,.34);
-}
 
 .btn{
   padding:11px 14px; border-radius:999px;
@@ -493,11 +485,12 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   .navRight{ min-width: 170px; }
 }
 @media (max-width: 640px){
-  .navCenter{ display:none; }
   .productGrid{ grid-template-columns: 1fr; }
   .reviewGrid{ grid-template-columns: 1fr; }
   .footerBottom{ flex-direction:column; }
 }
+
+/* ===== Balance Pill (deins) ===== */
 .balancePill{
   display:inline-flex;
   align-items:center;
@@ -515,17 +508,13 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
 
   box-shadow: 0 14px 34px rgba(0,0,0,.28);
   transition: transform .12s ease, filter .12s ease;
+  text-decoration:none;
 }
-
 .balancePill:hover{
   transform: translateY(-1px);
   filter: brightness(1.06);
 }
-
-.balanceAmount{
-  font-size:13px;
-}
-
+.balanceAmount{ font-size:13px; }
 .balancePlus{
   display:inline-flex;
   align-items:center;
@@ -540,6 +529,62 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
 
   background: rgba(255,255,255,.12);
   border:1px solid rgba(255,255,255,.18);
+}
+
+/* =========================================================
+   ✅ MOBILE OPTIMIERUNG (neu)
+   - Header stapelt sauber
+   - NavCenter wird horizontal scrollbar (statt komplett weg)
+   - Hintergründe/Bankkarten weniger aggressiv auf Mobile
+   ========================================================= */
+@media (max-width: 760px){
+  .topbar{ font-size:12.5px; padding:10px 12px; }
+
+  .navRow{
+    padding: 12px 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand{
+    min-width: unset;
+    flex: 1 1 auto;
+  }
+
+  .navRight{
+    min-width: unset;
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+
+  /* Nav wird NICHT versteckt, sondern scrollt */
+  .navCenter{
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+  .navCenter::-webkit-scrollbar{ display:none; }
+  .pill{ white-space: nowrap; }
+
+  .hero{ padding: 52px 0 22px; }
+  .rating .score{ font-size:40px; }
+
+  /* Bankkarten/Lines auf Mobile dezenter */
+  .bankCard{ opacity:.55; filter:saturate(1); }
+  .gridLines{ opacity:.08; }
+}
+
+@media (max-width: 420px){
+  .brandText small{ display:none; }
+  .balancePill{ padding:9px 12px; gap:8px; }
+  .balanceAmount{ font-size:12.5px; }
+  .balancePlus{ width:20px; height:20px; font-size:13px; }
 }
 </style>
 </head>
@@ -605,16 +650,15 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
         <a class="pill" href="products.html">Products</a>
         <a class="pill" href="#reviews">Reviews</a>
         <a class="pill" href="#contact">Contact</a>
-        <a class="pill" href="cart.html">Cart</a>
+        <!-- ✅ Cart-Link entfernt -->
       </nav>
 
       <div class="navRight">
-        
-
-        <a href="balance.html" class="balancePill">
-  <span class="balanceAmount" id="balance">€0.00</span>
-  <span class="balancePlus">+</span>
-</a>
+        <!-- ✅ Balance + Plus zusammen -->
+        <a href="balance.html" class="balancePill" aria-label="Balance aufladen">
+          <span class="balanceAmount" id="balance">€0.00</span>
+          <span class="balancePlus" aria-hidden="true">+</span>
+        </a>
 
         <div class="authArea" id="authArea"></div>
       </div>
@@ -697,7 +741,7 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // ===== Bestseller auf Startseite (3 ausgewählte IDs) =====
-    const BESTSELLER_IDS = [1, 14, 87]; // <-- deine 3 Artikel-IDs
+    const BESTSELLER_IDS = [1, 14, 87];
 
     function bestsellerCardHTML(p){
       const inStock = !!p.stock;
