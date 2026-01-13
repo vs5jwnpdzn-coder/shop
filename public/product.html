@@ -485,6 +485,35 @@ footer{
 @media (max-width: 640px){
   .burgerBtn{ display:inline-flex; align-items:center; justify-content:center; }
 }
+@media (max-width: 640px){
+  .navRow{
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .brand{
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .navRight{
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+
+  .authArea{
+    flex-wrap: wrap;          /* falls Customer Login lang ist */
+    justify-content: flex-end;
+  }
+
+  .hello{
+    max-width: 140px;         /* optional: verhindert harte Überläufe */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 </style>
 </head>
 
