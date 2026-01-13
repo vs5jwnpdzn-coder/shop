@@ -259,6 +259,49 @@
       .item{ grid-template-columns: 44px 1fr; }
       .right{ grid-column: 1 / -1; align-items:flex-start; }
     }
+    .balancePill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+
+  padding:10px 14px;
+  border-radius:999px;
+
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(10,12,18,.55);
+  color: rgba(243,246,255,.95);
+
+  font-weight:1000;
+  letter-spacing:.25px;
+
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  transition: transform .12s ease, filter .12s ease;
+}
+
+.balancePill:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.balanceAmount{
+  font-size:13px;
+}
+
+.balancePlus{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  width:22px;
+  height:22px;
+  border-radius:50%;
+
+  font-size:14px;
+  font-weight:1100;
+
+  background: rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+}
   </style>
 </head>
 
@@ -280,12 +323,12 @@
       </nav>
 
       <div class="navRight">
-        <div class="cartMini">🛒 <span class="badge" id="cartCount">0</span></div>
+        
 
-        <div class="wallet" id="wallet" style="display:none;">
-  💳 <span id="balance">€0.00</span>
-  <a class="btn btnGhost" id="topupLink" href="balance.html" aria-label="Guthaben aufladen">+</a>
-</div>
+        <a href="balance.html" class="balancePill">
+  <span class="balanceAmount" id="balance">€0.00</span>
+  <span class="balancePlus">+</span>
+</a>
 
         <div class="authArea" id="authArea"></div>
       </div>
