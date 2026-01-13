@@ -143,6 +143,101 @@
     @media (max-width: 640px){
       .card{ margin-top: 28px; }
     }
+
+    /* ===== ✅ MOBILE BURGER MENU (neu) ===== */
+    .burgerBtn{
+      display:none;
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,12,18,.55);
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      cursor:pointer;
+      padding:0;
+    }
+    .burgerBtn:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+    .burgerIcon{
+      width:18px; height:14px; margin:0 auto;
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .burgerIcon span{
+      height:2px;
+      border-radius:999px;
+      background: rgba(243,246,255,.92);
+      display:block;
+    }
+    .menuOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      z-index:60;
+      display:none;
+    }
+    .menuDrawer{
+      position:fixed;
+      top:0; right:0;
+      height:100%;
+      width:min(340px, 86vw);
+      background: rgba(5,6,10,.92);
+      border-left: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 30px 120px rgba(0,0,0,.72);
+      z-index:61;
+      transform: translateX(105%);
+      transition: transform .18s ease;
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .menuHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 6px 2px 10px;
+    }
+    .menuTitle{
+      font-weight:1100;
+      letter-spacing:.4px;
+      text-transform: uppercase;
+    }
+    .menuClose{
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      color: rgba(243,246,255,.92);
+      font-weight:1100;
+    }
+    .menuClose:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+    .menuLinks{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .menuLinks a{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      text-decoration:none;
+      font-weight: 1000;
+    }
+    .menuLinks a:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+
+    .menuOpen .menuOverlay{ display:block; }
+    .menuOpen .menuDrawer{ transform: translateX(0); }
+
+    @media (max-width: 640px){
+      .burgerBtn{ display:inline-flex; align-items:center; justify-content:center; }
+      .pill.backHome{ display:none; }
+    }
   </style>
 </head>
 
@@ -156,9 +251,32 @@
           <small>Store • Membership</small>
         </div>
       </div>
-      <a class="pill" href="index.html">← Home</a>
+
+      <!-- ✅ Mobile Burger -->
+      <button class="burgerBtn" id="burgerBtn" type="button" aria-label="Menu öffnen">
+        <div class="burgerIcon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </button>
+
+      <a class="pill backHome" href="index.html">← Home</a>
     </div>
   </header>
+
+  <!-- ✅ Mobile Drawer -->
+  <div class="menuOverlay" id="menuOverlay" aria-hidden="true"></div>
+  <aside class="menuDrawer" id="menuDrawer" aria-label="Mobile Menu">
+    <div class="menuHead">
+      <div class="menuTitle">Menu</div>
+      <button class="menuClose" id="menuClose" type="button" aria-label="Menu schließen">✕</button>
+    </div>
+    <div class="menuLinks">
+      <a href="index.html#home">Home <span>→</span></a>
+      <a href="products.html">Products <span>→</span></a>
+      <a href="cart.html">Cart <span>→</span></a>
+      <a href="balance.html">Balance <span>→</span></a>
+    </div>
+  </aside>
 
   <main class="wrap">
     <section class="card" aria-label="Login">
@@ -187,6 +305,30 @@
       </form>
     </section>
   </main>
+
+  <script>
+    // ===== ✅ Mobile Menu Toggle =====
+    (function(){
+      const burgerBtn = document.getElementById("burgerBtn");
+      const overlay = document.getElementById("menuOverlay");
+      const closeBtn = document.getElementById("menuClose");
+
+      function openMenu(){ document.body.classList.add("menuOpen"); }
+      function closeMenu(){ document.body.classList.remove("menuOpen"); }
+
+      if(burgerBtn) burgerBtn.addEventListener("click", openMenu);
+      if(closeBtn) closeBtn.addEventListener("click", closeMenu);
+      if(overlay) overlay.addEventListener("click", closeMenu);
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape") closeMenu();
+      });
+
+      document.querySelectorAll(".menuLinks a").forEach(a => {
+        a.addEventListener("click", () => closeMenu());
+      });
+    })();
+  </script>
 
   <script>
 (() => {
@@ -229,11 +371,6 @@
 
       const email = (document.getElementById("email")?.value || "").trim();
       const pass  = (document.getElementById("password")?.value || "");
-
-      // optional: quick hint, falls du dich vertippst
-      if(email && pass && (email.toLowerCase() !== DEMO_EMAIL || pass !== DEMO_PASS)){
-        // trotzdem API probieren (Server ist Quelle der Wahrheit)
-      }
 
       try{
         const r = await apiLogin(email, pass);

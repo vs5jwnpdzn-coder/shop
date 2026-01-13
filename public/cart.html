@@ -76,14 +76,6 @@
     .pill.active{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
 
     .navRight{ display:flex; align-items:center; justify-content:flex-end; gap:10px; min-width:250px; }
-    .cartMini{ display:flex; align-items:center; gap:8px; font-weight:1000; }
-    .badge{
-      min-width:30px; height:30px; border-radius:999px;
-      display:grid; place-items:center;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 12px 30px rgba(0,0,0,.34);
-    }
 
     .btn{
       padding:11px 14px; border-radius:999px;
@@ -259,49 +251,138 @@
       .item{ grid-template-columns: 44px 1fr; }
       .right{ grid-column: 1 / -1; align-items:flex-start; }
     }
+
     .balancePill{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
 
-  padding:10px 14px;
-  border-radius:999px;
+      padding:10px 14px;
+      border-radius:999px;
 
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(10,12,18,.55);
-  color: rgba(243,246,255,.95);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,12,18,.55);
+      color: rgba(243,246,255,.95);
 
-  font-weight:1000;
-  letter-spacing:.25px;
+      font-weight:1000;
+      letter-spacing:.25px;
 
-  box-shadow: 0 14px 34px rgba(0,0,0,.28);
-  transition: transform .12s ease, filter .12s ease;
-}
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .balancePill:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+    .balanceAmount{ font-size:13px; }
+    .balancePlus{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
 
-.balancePill:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-}
+      width:22px;
+      height:22px;
+      border-radius:50%;
 
-.balanceAmount{
-  font-size:13px;
-}
+      font-size:14px;
+      font-weight:1100;
 
-.balancePlus{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+    }
 
-  width:22px;
-  height:22px;
-  border-radius:50%;
+    /* ===== ✅ MOBILE BURGER MENU (neu) ===== */
+    .burgerBtn{
+      display:none;
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,12,18,.55);
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      cursor:pointer;
+      padding:0;
+    }
+    .burgerBtn:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+    .burgerIcon{
+      width:18px; height:14px; margin:0 auto;
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .burgerIcon span{
+      height:2px;
+      border-radius:999px;
+      background: rgba(243,246,255,.92);
+      display:block;
+    }
 
-  font-size:14px;
-  font-weight:1100;
+    .menuOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      z-index:60;
+      display:none;
+    }
+    .menuDrawer{
+      position:fixed;
+      top:0; right:0;
+      height:100%;
+      width:min(340px, 86vw);
+      background: rgba(5,6,10,.92);
+      border-left: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 30px 120px rgba(0,0,0,.72);
+      z-index:61;
+      transform: translateX(105%);
+      transition: transform .18s ease;
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .menuHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 6px 2px 10px;
+    }
+    .menuTitle{
+      font-weight:1100;
+      letter-spacing:.4px;
+      text-transform: uppercase;
+    }
+    .menuClose{
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+    }
+    .menuClose:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+    .menuLinks{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .menuLinks a{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      text-decoration:none;
+      font-weight: 1000;
+    }
+    .menuLinks a:hover{ filter: brightness(1.06); transform: translateY(-1px); }
 
-  background: rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.18);
-}
+    .menuOpen .menuOverlay{ display:block; }
+    .menuOpen .menuDrawer{ transform: translateX(0); }
+
+    @media (max-width: 640px){
+      .burgerBtn{ display:inline-flex; align-items:center; justify-content:center; }
+    }
   </style>
 </head>
 
@@ -323,17 +404,38 @@
       </nav>
 
       <div class="navRight">
-        
+        <!-- ✅ Mobile Burger -->
+        <button class="burgerBtn" id="burgerBtn" type="button" aria-label="Menu öffnen">
+          <div class="burgerIcon" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
 
         <a href="balance.html" class="balancePill">
-  <span class="balanceAmount" id="balance">€0.00</span>
-  <span class="balancePlus">+</span>
-</a>
+          <span class="balanceAmount" id="balance">€0.00</span>
+          <span class="balancePlus">+</span>
+        </a>
 
         <div class="authArea" id="authArea"></div>
       </div>
     </div>
   </header>
+
+  <!-- ✅ Mobile Drawer -->
+  <div class="menuOverlay" id="menuOverlay" aria-hidden="true"></div>
+  <aside class="menuDrawer" id="menuDrawer" aria-label="Mobile Menu">
+    <div class="menuHead">
+      <div class="menuTitle">Menu</div>
+      <button class="menuClose" id="menuClose" type="button" aria-label="Menu schließen">✕</button>
+    </div>
+
+    <div class="menuLinks">
+      <a href="index.html#home">Home <span>→</span></a>
+      <a href="products.html">Products <span>→</span></a>
+      <a href="cart.html">Cart <span>→</span></a>
+      <a href="balance.html">Balance <span>→</span></a>
+    </div>
+  </aside>
 
   <main class="wrap">
     <section class="pageHead">
@@ -380,5 +482,33 @@
   <script src="assets/wallet.js"></script>
   <script src="assets/cart.js"></script>
   <script src="assets/auth.js"></script>
+
+  <script>
+    // ===== ✅ Mobile Menu Toggle =====
+    (function(){
+      const burgerBtn = document.getElementById("burgerBtn");
+      const overlay = document.getElementById("menuOverlay");
+      const closeBtn = document.getElementById("menuClose");
+
+      function openMenu(){
+        document.body.classList.add("menuOpen");
+      }
+      function closeMenu(){
+        document.body.classList.remove("menuOpen");
+      }
+
+      if(burgerBtn) burgerBtn.addEventListener("click", openMenu);
+      if(closeBtn) closeBtn.addEventListener("click", closeMenu);
+      if(overlay) overlay.addEventListener("click", closeMenu);
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape") closeMenu();
+      });
+
+      document.querySelectorAll(".menuLinks a").forEach(a => {
+        a.addEventListener("click", () => closeMenu());
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -502,9 +502,6 @@ header{
   transform: translateY(-1px);
   filter: brightness(1.06);
 }
-.balance a {
-  text-decoration: none;
-}
 .balanceAmount{
   font-size:13px;
 }
@@ -523,6 +520,99 @@ header{
 
   background: rgba(255,255,255,.12);
   border:1px solid rgba(255,255,255,.18);
+}
+
+/* ===== ✅ MOBILE BURGER MENU (neu) ===== */
+.burgerBtn{
+  display:none;
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(10,12,18,.55);
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  cursor:pointer;
+  padding:0;
+}
+.burgerBtn:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+.burgerIcon{
+  width:18px; height:14px; margin:0 auto;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.burgerIcon span{
+  height:2px;
+  border-radius:999px;
+  background: rgba(243,246,255,.92);
+  display:block;
+}
+
+.menuOverlay{
+  position:fixed; inset:0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+  z-index:60;
+  display:none;
+}
+.menuDrawer{
+  position:fixed;
+  top:0; right:0;
+  height:100%;
+  width:min(340px, 86vw);
+  background: rgba(5,6,10,.92);
+  border-left: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 30px 120px rgba(0,0,0,.72);
+  z-index:61;
+  transform: translateX(105%);
+  transition: transform .18s ease;
+  padding: 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+.menuHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 6px 2px 10px;
+}
+.menuTitle{
+  font-weight:1100;
+  letter-spacing:.4px;
+  text-transform: uppercase;
+}
+.menuClose{
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  cursor:pointer;
+}
+.menuClose:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+.menuLinks{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.menuLinks a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  text-decoration:none;
+  font-weight: 1000;
+}
+.menuLinks a:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+
+.menuOpen .menuOverlay{ display:block; }
+.menuOpen .menuDrawer{ transform: translateX(0); }
+
+@media (max-width: 640px){
+  .burgerBtn{ display:inline-flex; align-items:center; justify-content:center; }
 }
 </style>
 </head>
@@ -590,17 +680,38 @@ header{
       </nav>
 
       <div class="navRight">
-        
+        <!-- ✅ Mobile Burger -->
+        <button class="burgerBtn" id="burgerBtn" type="button" aria-label="Menu öffnen">
+          <div class="burgerIcon" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
 
         <a href="balance.html" class="balancePill">
-  <span class="balanceAmount" id="balance">€0.00</span>
-  <span class="balancePlus">+</span>
-</a>
+          <span class="balanceAmount" id="balance">€0.00</span>
+          <span class="balancePlus">+</span>
+        </a>
 
         <div class="authArea" id="authArea"></div>
       </div>
     </div>
   </header>
+
+  <!-- ✅ Mobile Drawer -->
+  <div class="menuOverlay" id="menuOverlay" aria-hidden="true"></div>
+  <aside class="menuDrawer" id="menuDrawer" aria-label="Mobile Menu">
+    <div class="menuHead">
+      <div class="menuTitle">Menu</div>
+      <button class="menuClose" id="menuClose" type="button" aria-label="Menu schließen">✕</button>
+    </div>
+
+    <div class="menuLinks">
+      <a href="index.html#home">Home <span>→</span></a>
+      <a href="products.html">Products <span>→</span></a>
+      <a href="cart.html">Cart <span>→</span></a>
+      <a href="balance.html">Balance <span>→</span></a>
+    </div>
+  </aside>
 
   <main class="wrap">
     <div class="catBar" id="catBar" aria-label="Kategorien"></div>
@@ -608,15 +719,42 @@ header{
   </main>
 
   <!-- Daten zuerst -->
-<script src="products-data.js"></script>
+  <script src="products-data.js"></script>
 
-<!-- shared helpers -->
-<script src="assets/cart.js"></script>
-<script src="assets/wallet.js"></script>
-<script src="assets/auth.js"></script>
-<script src="assets/ui.js"></script>
+  <!-- shared helpers -->
+  <script src="assets/cart.js"></script>
+  <script src="assets/wallet.js"></script>
+  <script src="assets/auth.js"></script>
+  <script src="assets/ui.js"></script>
 
   <script>
+    // ===== ✅ Mobile Menu Toggle =====
+    (function(){
+      const burgerBtn = document.getElementById("burgerBtn");
+      const overlay = document.getElementById("menuOverlay");
+      const closeBtn = document.getElementById("menuClose");
+
+      function openMenu(){
+        document.body.classList.add("menuOpen");
+      }
+      function closeMenu(){
+        document.body.classList.remove("menuOpen");
+      }
+
+      if(burgerBtn) burgerBtn.addEventListener("click", openMenu);
+      if(closeBtn) closeBtn.addEventListener("click", closeMenu);
+      if(overlay) overlay.addEventListener("click", closeMenu);
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape") closeMenu();
+      });
+
+      // Beim Klick auf Links: Menü schließen
+      document.querySelectorAll(".menuLinks a").forEach(a => {
+        a.addEventListener("click", () => closeMenu());
+      });
+    })();
+
     // ✅ Kategorien (bitte neutral halten)
     const CATEGORIES = [
       { id: "all", label: "Übersicht" },
@@ -715,32 +853,30 @@ header{
     renderCats();
     renderProducts();
 
-    // ✅ Add-Button: nutzt ab jetzt assets/cart.js (window.addToCart)
     // ✅ Add-Button: nutzt assets/cart.js (window.addToCart) – mit Guard
-grid.addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-add]");
-  if(!btn) return;
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-add]");
+      if(!btn) return;
 
-  e.preventDefault();
-  e.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
 
-  // Guard: cart.js muss geladen sein
-  if(typeof window.addToCart !== "function"){
-    console.error("addToCart fehlt – assets/cart.js nicht geladen?");
-    if(typeof window.showToast === "function") window.showToast("Cart nicht geladen", "error");
-    return;
-  }
+      if(typeof window.addToCart !== "function"){
+        console.error("addToCart fehlt – assets/cart.js nicht geladen?");
+        if(typeof window.showToast === "function") window.showToast("Cart nicht geladen", "error");
+        return;
+      }
 
-  const id = Number(btn.dataset.add);
-  if(!id) return;
+      const id = Number(btn.dataset.add);
+      if(!id) return;
 
-  window.addToCart(id, 1);
+      window.addToCart(id, 1);
 
-  const name = btn.dataset.name || "Produkt";
-  if(typeof window.showToast === "function"){
-    window.showToast(`✅ ${name} added to cart`, "ok");
-  }
-});
+      const name = btn.dataset.name || "Produkt";
+      if(typeof window.showToast === "function"){
+        window.showToast(`✅ ${name} added to cart`, "ok");
+      }
+    });
 
     // ===== particles =====
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
