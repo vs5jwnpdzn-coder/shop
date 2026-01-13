@@ -286,7 +286,7 @@
 
               <div class="mini">
                 Hinweis: Die echte Zahlung läuft später über HoodPay. Aktuell ruft der Button nur deinen Server-Endpunkt
-                <code>/api/topup/create</code> auf und leitet auf die zurückgelieferte <code>paymentUrl</code> weiter.
+                <code>/api/topup-create</code> auf und leitet auf die zurückgelieferte <code>paymentUrl</code> weiter.
               </div>
             </div>
           </form>
@@ -304,7 +304,7 @@
         <div class="box">
           <div class="k">Server Flow</div>
           <div class="v" style="text-align:right">
-            POST /api/topup/create<br>
+            POST /api/topup-create<br>
             → paymentUrl<br>
             → redirect
           </div>
@@ -373,7 +373,6 @@
     }
 
     function sanitizeAmountEUR(raw){
-      // nur ganzzahlig, >= 10
       const n = Math.floor(Number(raw));
       if(!Number.isFinite(n)) return null;
       if(n < 10) return null;
@@ -386,7 +385,6 @@
       const amountInput = document.getElementById("amount");
       const payBtn = document.getElementById("payBtn");
 
-      // Quick buttons
       document.querySelectorAll("button[data-amt]").forEach(btn => {
         btn.addEventListener("click", () => {
           const v = Number(btn.getAttribute("data-amt") || "0");
@@ -406,7 +404,6 @@
           return;
         }
 
-        // Button sperren während Request
         payBtn.disabled = true;
         const oldText = payBtn.textContent;
         payBtn.textContent = "Weiterleitung…";
@@ -414,7 +411,7 @@
         try{
           const amountCents = eur * 100;
 
-          const r = await api("/api/topup/create", {
+          const r = await api("/api/topup-create", {
             method: "POST",
             body: JSON.stringify({ amountCents })
           });

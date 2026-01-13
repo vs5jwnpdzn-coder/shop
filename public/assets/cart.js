@@ -258,18 +258,19 @@
         }
 
         // ✅ Erfolg
-        clearCart();
-        updateBadge();
-        renderCart();
-        window.refreshBalanceUI?.();
+        // ✅ Erfolg
+clearCart();
+updateBadge();
+renderCart();
+window.refreshBalanceUI?.();
 
-        toast("✅ Bestellung erfolgreich", "ok");
+toast("✅ Bestellung erfolgreich", "ok");
 
-        // ✅ Success URL mit Details
-        location.href =
-  "success.html?paid=1" +
-  "&orderId=" + encodeURIComponent(data.orderId || "") +
-  "&totalCents=" + encodeURIComponent(String(data.totalCents ?? ""));
+// ✅ NEU: mit Details weiterleiten
+const orderId = encodeURIComponent(data?.orderId || "");
+const totalCents = encodeURIComponent(String(data?.totalCents ?? ""));
+location.href =
+  `success.html?paid=1&kind=checkout&orderId=${orderId}&totalCents=${totalCents}`;
       } catch(err){
         console.error(err);
         toast("Server nicht erreichbar", "error");

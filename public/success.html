@@ -92,26 +92,7 @@
       letter-spacing:.2px;
       word-break: break-all;
       text-align:right;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      justify-content:flex-end;
     }
-
-    .copyBtn{
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(243,246,255,.95);
-      font-weight: 1000;
-      letter-spacing:.2px;
-      cursor:pointer;
-      transition: transform .12s ease, filter .12s ease;
-      white-space:nowrap;
-    }
-    .copyBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
-    .copyBtn:active{ transform: translateY(0px) scale(.99); }
 
     .pill{
       display:inline-flex;
@@ -141,6 +122,7 @@
       letter-spacing:.22px;
       box-shadow: 0 16px 40px rgba(0,0,0,.42);
       transition: transform .12s ease, filter .12s ease;
+      cursor:pointer;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
     .btnPrimary{
@@ -155,106 +137,139 @@
       font-size: 12px;
       line-height: 1.55;
     }
+    .muted{ color: rgba(243,246,255,.65); }
+    code{
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      font-weight: 900;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="card">
-      <h1 id="headline">Payment Status</h1>
+      <h1 id="headline">Status</h1>
       <p class="sub" id="msg">Bitte warten…</p>
 
       <div class="grid" id="details" style="display:none;">
-        <div class="row">
-          <div class="label">Order ID</div>
-          <div class="value">
-            <span id="orderId">—</span>
-            <button class="copyBtn" id="copyBtn" type="button" style="display:none;">Copy</button>
-          </div>
+        <div class="row" id="rowKind" style="display:none;">
+          <div class="label">Typ</div>
+          <div class="value" id="kind">—</div>
         </div>
 
-        <div class="row">
+        <div class="row" id="rowOrder" style="display:none;">
+          <div class="label" id="idLabel">Order ID</div>
+          <div class="value" id="idValue">—</div>
+        </div>
+
+        <div class="row" id="rowAmount" style="display:none;">
           <div class="label">Betrag</div>
           <div class="value" id="amount">—</div>
         </div>
       </div>
 
-      <div class="pill" id="badge" style="display:none;">✅ Payment erfolgreich</div>
+      <div class="pill" id="badge" style="display:none;">✅ Erfolgreich</div>
 
       <div class="actions">
         <a class="btn btnPrimary" href="products.html">Weiter shoppen</a>
         <a class="btn" href="cart.html">Zum Cart</a>
+        <a class="btn" href="balance.html">Guthaben</a>
       </div>
 
-      <div class="hint">
+      <div class="hint" id="hint">
         Demo: Später kommt hier eine echte Bestätigung (z.B. über Webhook/Payment Provider).
       </div>
     </div>
   </div>
 
   <script>
-    // optional: verhindert, dass Browser diese Seite cached und dann "alte" Order-Infos zeigt
-    // (hilft v.a. bei Back/Forward-Caches in manchen Browsern)
-    window.addEventListener("pageshow", (e) => {
-      if (e.persisted) location.reload();
-    });
-
     function formatEURFromCents(cents){
       const n = (Number(cents) || 0) / 100;
       return "€" + n.toFixed(2);
     }
 
     const params = new URLSearchParams(location.search);
-    const paid = params.get("paid");                // "1"
-    const orderId = (params.get("orderId") || "").trim();
-    const totalCents = params.get("totalCents");    // "1234"
+
+    const paid = params.get("paid"); // "1" oder null
+    const kind = (params.get("kind") || "").toLowerCase(); // "checkout" | "topup"
+
+    const orderId = params.get("orderId") || "";
+    const topupId  = params.get("topupId")  || "";
+    const totalCentsRaw = params.get("totalCents"); // string
 
     const headline = document.getElementById("headline");
     const msg = document.getElementById("msg");
     const badge = document.getElementById("badge");
     const details = document.getElementById("details");
-    const orderEl = document.getElementById("orderId");
+
+    const rowKind = document.getElementById("rowKind");
+    const kindEl = document.getElementById("kind");
+
+    const rowOrder = document.getElementById("rowOrder");
+    const idLabel = document.getElementById("idLabel");
+    const idValue = document.getElementById("idValue");
+
+    const rowAmount = document.getElementById("rowAmount");
     const amountEl = document.getElementById("amount");
-    const copyBtn = document.getElementById("copyBtn");
 
-    function setSuccess(){
-      headline.textContent = "Payment erfolgreich ✅";
-      msg.textContent = "Danke! Deine Demo-Bestellung wurde bestätigt.";
-      badge.style.display = "inline-flex";
+    function showDetails(){
       details.style.display = "grid";
-
-      orderEl.textContent = orderId || "—";
-
-      if(orderId){
-        copyBtn.style.display = "inline-flex";
-        copyBtn.addEventListener("click", async () => {
-          try{
-            await navigator.clipboard.writeText(orderId);
-            copyBtn.textContent = "Copied!";
-            setTimeout(() => (copyBtn.textContent = "Copy"), 900);
-          }catch{
-            // fallback: nichts
-          }
-        });
-      }
-
-      amountEl.textContent =
-        (totalCents != null && totalCents !== "")
-          ? formatEURFromCents(totalCents)
-          : "—";
     }
 
-    function setMissing(){
+    function setKindLabel(){
+      if(!kind) return;
+      rowKind.style.display = "flex";
+      kindEl.textContent = kind === "topup" ? "Top-up" : (kind === "checkout" ? "Checkout" : kind);
+    }
+
+    function setIdRow(){
+      const id = (kind === "topup") ? topupId : orderId;
+      if(!id) return;
+      rowOrder.style.display = "flex";
+      idLabel.textContent = (kind === "topup") ? "Top-up ID" : "Order ID";
+      idValue.textContent = id;
+    }
+
+    function setAmountRow(){
+      if(totalCentsRaw == null || totalCentsRaw === "") return;
+      rowAmount.style.display = "flex";
+      amountEl.textContent = formatEURFromCents(totalCentsRaw);
+    }
+
+    if(paid === "1"){
+      headline.textContent = "Erfolgreich ✅";
+
+      if(kind === "checkout"){
+        msg.textContent = "Danke! Deine Bestellung wurde bestätigt.";
+        badge.textContent = "✅ Checkout erfolgreich";
+      } else if(kind === "topup"){
+        msg.textContent = "Danke! Dein Guthaben-Top-up wurde gestartet / bestätigt (Demo).";
+        badge.textContent = "✅ Top-up erfolgreich";
+      } else {
+        msg.textContent = "Danke! Vorgang bestätigt.";
+        badge.textContent = "✅ Erfolgreich";
+      }
+
+      badge.style.display = "inline-flex";
+      showDetails();
+      setKindLabel();
+      setIdRow();
+      setAmountRow();
+
+      // Falls gar keine Details da sind, trotzdem sauber:
+      if(!kind && !orderId && !topupId && (totalCentsRaw == null || totalCentsRaw === "")){
+        document.getElementById("hint").innerHTML =
+          'Hinweis: Es wurden keine Detail-Parameter übergeben. (z.B. <code>orderId</code>, <code>totalCents</code>)';
+      }
+
+    } else {
       headline.textContent = "Keine Zahlungsinfo";
       msg.textContent = "Hinweis: Keine gültige Zahlungsbestätigung gefunden.";
       badge.style.display = "none";
       details.style.display = "none";
-    }
-
-    if(paid === "1"){
-      setSuccess();
-    } else {
-      setMissing();
     }
   </script>
 </body>
