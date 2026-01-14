@@ -6,7 +6,6 @@
 <title>Premium Shop</title>
 
 <style>
-/* --- DEIN CSS (unverändert + MOBILE OPTIMIERUNG am Ende) --- */
 :root{
   --bg:#05060a;
   --bg2:#070a12;
@@ -244,6 +243,7 @@ header{
   text-decoration:none;
   box-shadow: 0 16px 40px rgba(0,0,0,.42);
   position:relative;
+  color: rgba(243,246,255,.95); /* ✅ Logout-Text immer weiß */
 }
 .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 .btn:active{ transform: translateY(0px) scale(.99); filter: brightness(.98); }
@@ -467,20 +467,36 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
 .powered span{ color: rgba(243,246,255,.90); font-weight: 1100; }
 
 .authArea{ display:flex; align-items:center; gap:10px; }
-.btnGhost{ background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.12); }
-.btnGhost{
-  background: rgba(255,255,255,.04);
-  border-color: rgba(255,255,255,.12);
-  color: rgba(243,246,255,.95); /* ← DAS FEHLTE */
+.btnGhost{ background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.12); color: rgba(243,246,255,.95); }
+
+.balancePill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(10,12,18,.55);
+  color: rgba(243,246,255,.95);
+  font-weight:1000;
+  letter-spacing:.25px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  transition: transform .12s ease, filter .12s ease;
+  text-decoration:none;
 }
-#topupLink{
-  width:34px;
-  height:34px;
-  display:grid;
-  place-items:center;
-  padding:0;
-  font-size:18px;
-  line-height:1;
+.balancePill:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+.balanceAmount{ font-size:13px; }
+.balancePlus{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  font-size:14px;
+  font-weight:1100;
+  background: rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
 }
 
 @media (max-width: 980px){
@@ -488,218 +504,17 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   .reviewGrid{ grid-template-columns: repeat(2, 1fr); }
   .navRight{ min-width: 170px; }
 }
+
 @media (max-width: 640px){
+  /* ✅ wie Products/Cart/Product: Nav weg auf Mobile */
+  .navCenter{ display:none; }
+
   .productGrid{ grid-template-columns: 1fr; }
   .reviewGrid{ grid-template-columns: 1fr; }
   .footerBottom{ flex-direction:column; }
-}
-
-/* ===== Balance Pill (deins) ===== */
-.balancePill{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-
-  padding:10px 14px;
-  border-radius:999px;
-
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(10,12,18,.55);
-  color: rgba(243,246,255,.95);
-
-  font-weight:1000;
-  letter-spacing:.25px;
-
-  box-shadow: 0 14px 34px rgba(0,0,0,.28);
-  transition: transform .12s ease, filter .12s ease;
-  text-decoration:none;
-}
-.balancePill:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-}
-.balanceAmount{ font-size:13px; }
-.balancePlus{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  width:22px;
-  height:22px;
-  border-radius:50%;
-
-  font-size:14px;
-  font-weight:1100;
-
-  background: rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.18);
-}
-
-/* =========================================================
-   ✅ MOBILE OPTIMIERUNG (neu)
-   - Header stapelt sauber
-   - NavCenter wird horizontal scrollbar (statt komplett weg)
-   - Hintergründe/Bankkarten weniger aggressiv auf Mobile
-   ========================================================= */
-@media (max-width: 760px){
-  .topbar{ font-size:12.5px; padding:10px 12px; }
-
-  .navRow{
-    padding: 12px 0;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .brand{
-    min-width: unset;
-    flex: 1 1 auto;
-  }
-
-  .navRight{
-    min-width: unset;
-    flex: 0 0 auto;
-    gap: 8px;
-  }
-
-  /* Nav wird NICHT versteckt, sondern scrollt */
-  .navCenter{
-    order: 3;
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    gap: 8px;
-    padding-bottom: 2px;
-  }
-  .navCenter::-webkit-scrollbar{ display:none; }
-  .pill{ white-space: nowrap; }
-
-  .hero{ padding: 52px 0 22px; }
-  .rating .score{ font-size:40px; }
-
-  /* Bankkarten/Lines auf Mobile dezenter */
-  .bankCard{ opacity:.55; filter:saturate(1); }
-  .gridLines{ opacity:.08; }
-}
-
-@media (max-width: 420px){
   .brandText small{ display:none; }
-  .balancePill{ padding:9px 12px; gap:8px; }
-  .balanceAmount{ font-size:12.5px; }
-  .balancePlus{ width:20px; height:20px; font-size:13px; }
-}
-/* ✅ Burger standard: versteckt am Desktop */
-.burger{ display:none; }
-
-/* ✅ Mobile Menu standard: versteckt */
-.mobileMenu{ display:none; }
-
-@media (max-width: 760px){
-  /* Desktop Nav ausblenden */
-  .navCenter{ display:none; }
-
-  /* Burger anzeigen */
-  .burger{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:40px;
-    height:40px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.05);
-    color: rgba(243,246,255,.95);
-    font-weight:1100;
-    cursor:pointer;
-    box-shadow: 0 14px 34px rgba(0,0,0,.26);
-  }
-
-  /* Overlay Menü */
-  .mobileMenu{
-    position:absolute;
-    top:64px;              /* unter Header-Reihe */
-    right: 4vw;
-    width: min(320px, 92vw);
-    padding: 12px;
-    border-radius: 18px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(10,12,18,.88);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 22px 70px rgba(0,0,0,.62);
-    display:none;
-    flex-direction:column;
-    gap:10px;
-    z-index:999;
-  }
-
-  .mobileMenu.open{ display:flex; }
-
-  /* Pills im Menü etwas breiter/komfortabler */
-  .mobileMenu .pill{
-    display:flex;
-    justify-content:center;
-  }
-
-  /* Header muss relative sein, damit Menu “drunter” sitzt */
-  header{ position:sticky; }
-  .navRow{ position:relative; }
-}
-@media (max-width: 640px){
-  .navCenter{ display:none; }
   .brand{ min-width: 0; }
   .navRight{ min-width: 0; }
-  .brandText small{ display:none; }
-}
-/* Desktop: Burger aus */
-.burger{ display:none; }
-.mobileMenu{ display:none; }
-
-@media (max-width: 640px){
-  /* Desktop-Nav aus, Burger an */
-  .navCenter{ display:none; }
-
-  .burger{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:40px;
-    height:40px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.05);
-    color: rgba(243,246,255,.95);
-    font-weight:1100;
-    cursor:pointer;
-    box-shadow: 0 14px 34px rgba(0,0,0,.26);
-  }
-
-  /* wichtig: damit das Menü richtig "unter" der Reihe sitzt */
-  .navRow{ position:relative; }
-
-  .mobileMenu{
-    position:absolute;
-    top: calc(100% + 10px);
-    right: 0;
-    width: min(320px, 92vw);
-    padding: 12px;
-    border-radius: 18px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(10,12,18,.88);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 22px 70px rgba(0,0,0,.62);
-    display:none;
-    flex-direction:column;
-    gap:10px;
-    z-index:999;
-  }
-  .mobileMenu.open{ display:flex; }
-
-  .mobileMenu .pill{
-    display:flex;
-    justify-content:center;
-  }
 }
 </style>
 </head>
@@ -751,42 +566,32 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   </div>
 
   <header>
-  <div class="wrap navRow">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div class="brandText">
-        <b>PremiumShop</b>
-        <small>Store • Membership • Service</small>
+    <div class="wrap navRow">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brandText">
+          <b>PremiumShop</b>
+          <small>Store • Membership • Service</small>
+        </div>
+      </div>
+
+      <!-- ✅ wie die anderen: nur echte Seiten -->
+      <nav class="navCenter" aria-label="Navigation">
+        <a class="pill active" href="index.html#home">Home</a>
+        <a class="pill" href="products.html">Products</a>
+        <a class="pill" href="cart.html">Cart</a>
+      </nav>
+
+      <div class="navRight">
+        <a href="balance.html" class="balancePill" aria-label="Balance aufladen">
+          <span class="balanceAmount" id="balance">€0.00</span>
+          <span class="balancePlus" aria-hidden="true">+</span>
+        </a>
+
+        <div class="authArea" id="authArea"></div>
       </div>
     </div>
-
-    <nav class="navCenter" aria-label="Navigation">
-      <a class="pill active" href="#home">Home</a>
-      <a class="pill" href="products.html">Products</a>
-      <a class="pill" href="#reviews">Reviews</a>
-      <a class="pill" href="#contact">Contact</a>
-    </nav>
-    <button class="burger" id="burgerBtn" aria-label="Menü öffnen" aria-controls="mobileMenu" aria-expanded="false">
-  ☰
-</button>
-
-<div class="mobileMenu" id="mobileMenu" aria-hidden="true">
-  <a class="pill" href="#home">Home</a>
-  <a class="pill" href="products.html">Products</a>
-  <a class="pill" href="#reviews">Reviews</a>
-  <a class="pill" href="#contact">Contact</a>
-</div>
-
-    <div class="navRight">
-      <a href="balance.html" class="balancePill" aria-label="Balance aufladen">
-        <span class="balanceAmount" id="balance">€0.00</span>
-        <span class="balancePlus" aria-hidden="true">+</span>
-      </a>
-
-      <div class="authArea" id="authArea"></div>
-    </div>
-  </div>
-</header>
+  </header>
 
   <main class="wrap" id="home">
     <section class="hero">
@@ -807,7 +612,6 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
     </section>
 
     <h2 class="sectionTitle" id="products">Bestseller</h2>
-
     <section class="productGrid" id="bestsellerGrid" aria-label="Bestseller Produkte"></section>
 
     <div class="centerRow">
@@ -852,18 +656,15 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
     </div>
   </footer>
 
-  <!-- ✅ Reihenfolge wichtig -->
   <script src="products-data.js"></script>
   <script src="assets/ui.js"></script>
   <script src="assets/wallet.js"></script>
   <script src="assets/cart.js"></script>
   <script src="assets/auth.js"></script>
 
-  <!-- ✅ Page Script nur für Bestseller + Particles -->
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // ===== Bestseller auf Startseite (3 ausgewählte IDs) =====
     const BESTSELLER_IDS = [1, 14, 87];
 
     function bestsellerCardHTML(p){
@@ -915,7 +716,6 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
         : `<div class="empty">Keine Bestseller ausgewählt.</div>`;
     })();
 
-    // ===== particles =====
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
@@ -967,33 +767,5 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
       tick();
     }
   </script>
-  <script>
-(function(){
-  const btn = document.getElementById("burgerBtn");
-  const menu = document.getElementById("mobileMenu");
-  if(!btn || !menu) return;
-
-  function close(){
-    menu.classList.remove("open");
-    btn.setAttribute("aria-expanded","false");
-    menu.setAttribute("aria-hidden","true");
-  }
-
-  btn.addEventListener("click", () => {
-    const open = menu.classList.toggle("open");
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
-    menu.setAttribute("aria-hidden", open ? "false" : "true");
-  });
-
-  menu.addEventListener("click", (e) => {
-    if(e.target.closest("a")) close();
-  });
-
-  document.addEventListener("click", (e) => {
-    if(e.target.closest("#mobileMenu") || e.target.closest("#burgerBtn")) return;
-    close();
-  });
-})();
-</script>
 </body>
 </html>
