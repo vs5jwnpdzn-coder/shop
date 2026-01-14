@@ -243,7 +243,7 @@ header{
   text-decoration:none;
   box-shadow: 0 16px 40px rgba(0,0,0,.42);
   position:relative;
-  color: rgba(243,246,255,.95); /* ✅ Text immer weiß */
+  color: rgba(243,246,255,.95);
 }
 .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 .btn:active{ transform: translateY(0px) scale(.99); filter: brightness(.98); }
@@ -495,65 +495,118 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   .navRight{ min-width: 170px; }
 }
 
-/* ===== MOBILE BURGER (wie Products/Cart) ===== */
-.burger{ display:none; }
-.mobileMenu{ display:none; }
+/* ===== ✅ MOBILE BURGER MENU (wie products.html) ===== */
+.burgerBtn{
+  display:none;
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(10,12,18,.55);
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  cursor:pointer;
+  padding:0;
+}
+.burgerBtn:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+.burgerIcon{
+  width:18px; height:14px; margin:0 auto;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.burgerIcon span{
+  height:2px;
+  border-radius:999px;
+  background: rgba(243,246,255,.92);
+  display:block;
+}
+
+.menuOverlay{
+  position:fixed; inset:0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+  z-index:60;
+  display:none;
+}
+.menuDrawer{
+  position:fixed;
+  top:0; right:0;
+  height:100%;
+  width:min(340px, 86vw);
+  background: rgba(5,6,10,.92);
+  border-left: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 30px 120px rgba(0,0,0,.72);
+  z-index:61;
+  transform: translateX(105%);
+  transition: transform .18s ease;
+  padding: 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+.menuHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 6px 2px 10px;
+}
+.menuTitle{
+  font-weight:1100;
+  letter-spacing:.4px;
+  text-transform: uppercase;
+}
+.menuClose{
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  cursor:pointer;
+}
+.menuClose:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+.menuLinks{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.menuLinks a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  text-decoration:none;
+  font-weight: 1000;
+}
+.menuLinks a:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+
+.menuOpen .menuOverlay{ display:block; }
+.menuOpen .menuDrawer{ transform: translateX(0); }
 
 @media (max-width: 640px){
+  .burgerBtn{ display:inline-flex; align-items:center; justify-content:center; }
+}
+
+/* Mobile Layout Fix wie products.html */
+@media (max-width: 640px){
+  .navCenter{ display:none; }
   .navRow{
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 0;
+    align-items: center;
   }
-
-  .brand{ min-width: 0; flex: 1 1 auto; }
-  .brandText small{ display:none; }
-
-  .navRight{ min-width: 0; gap: 8px; }
-
-  /* Desktop-Nav aus */
-  .navCenter{ display:none; }
-
-  /* Burger an */
-  .burger{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:40px;
-    height:40px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.05);
-    color: rgba(243,246,255,.95);
-    font-weight:1100;
-    cursor:pointer;
-    box-shadow: 0 14px 34px rgba(0,0,0,.26);
+  .brand{
+    min-width: 0;
+    flex: 1 1 auto;
   }
-
-  /* wichtig: Positionierungs-Anchor */
-  .navRow{ position:relative; }
-
-  .mobileMenu{
-    position:absolute;
-    top: calc(100% + 10px);
-    right: 0;
-    width: min(320px, 92vw);
-    padding: 12px;
-    border-radius: 18px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(10,12,18,.88);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 22px 70px rgba(0,0,0,.62);
-    display:none;
-    flex-direction:column;
-    gap:10px;
-    z-index:9999;
+  .navRight{
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: flex-end;
   }
-  .mobileMenu.open{ display:flex; }
-
-  .mobileMenu .pill{
-    display:flex;
-    justify-content:center;
+  .authArea{
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 }
 </style>
@@ -615,34 +668,45 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
         </div>
       </div>
 
-      <!-- Desktop Nav -->
       <nav class="navCenter" aria-label="Navigation">
         <a class="pill active" href="index.html#home">Home</a>
         <a class="pill" href="products.html">Products</a>
         <a class="pill" href="cart.html">Cart</a>
       </nav>
 
-      <!-- Mobile Burger -->
-      <button class="burger" id="burgerBtn" aria-label="Menü öffnen" aria-controls="mobileMenu" aria-expanded="false">
-        ☰
-      </button>
-
-      <!-- Mobile Dropdown -->
-      <div class="mobileMenu" id="mobileMenu" aria-hidden="true">
-        <a class="pill" href="index.html#home">Home</a>
-        <a class="pill" href="products.html">Products</a>
-        <a class="pill" href="cart.html">Cart</a>
-      </div>
-
       <div class="navRight">
+        <!-- ✅ Mobile Burger (wie products.html) -->
+        <button class="burgerBtn" id="burgerBtn" type="button" aria-label="Menu öffnen">
+          <div class="burgerIcon" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
+
         <a href="balance.html" class="balancePill" aria-label="Balance aufladen">
           <span class="balanceAmount" id="balance">€0.00</span>
           <span class="balancePlus" aria-hidden="true">+</span>
         </a>
+
         <div class="authArea" id="authArea"></div>
       </div>
     </div>
   </header>
+
+  <!-- ✅ Mobile Drawer (wie products.html) -->
+  <div class="menuOverlay" id="menuOverlay" aria-hidden="true"></div>
+  <aside class="menuDrawer" id="menuDrawer" aria-label="Mobile Menu">
+    <div class="menuHead">
+      <div class="menuTitle">Menu</div>
+      <button class="menuClose" id="menuClose" type="button" aria-label="Menu schließen">✕</button>
+    </div>
+
+    <div class="menuLinks">
+      <a href="index.html#home">Home <span>→</span></a>
+      <a href="products.html">Products <span>→</span></a>
+      <a href="cart.html">Cart <span>→</span></a>
+      <a href="balance.html">Balance <span>→</span></a>
+    </div>
+  </aside>
 
   <main class="wrap" id="home">
     <section class="hero">
@@ -717,6 +781,28 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // ===== ✅ Mobile Menu Toggle (wie products.html) =====
+    (function(){
+      const burgerBtn = document.getElementById("burgerBtn");
+      const overlay = document.getElementById("menuOverlay");
+      const closeBtn = document.getElementById("menuClose");
+
+      function openMenu(){ document.body.classList.add("menuOpen"); }
+      function closeMenu(){ document.body.classList.remove("menuOpen"); }
+
+      if(burgerBtn) burgerBtn.addEventListener("click", openMenu);
+      if(closeBtn) closeBtn.addEventListener("click", closeMenu);
+      if(overlay) overlay.addEventListener("click", closeMenu);
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape") closeMenu();
+      });
+
+      document.querySelectorAll(".menuLinks a").forEach(a => {
+        a.addEventListener("click", () => closeMenu());
+      });
+    })();
+
     // ===== Bestseller auf Startseite (3 ausgewählte IDs) =====
     const BESTSELLER_IDS = [1, 14, 87];
 
@@ -770,36 +856,6 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
     })();
   </script>
 
-  <!-- ✅ Burger Menü JS -->
-  <script>
-  (function(){
-    const btn = document.getElementById("burgerBtn");
-    const menu = document.getElementById("mobileMenu");
-    if(!btn || !menu) return;
-
-    function close(){
-      menu.classList.remove("open");
-      btn.setAttribute("aria-expanded","false");
-      menu.setAttribute("aria-hidden","true");
-    }
-
-    btn.addEventListener("click", () => {
-      const open = menu.classList.toggle("open");
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-      menu.setAttribute("aria-hidden", open ? "false" : "true");
-    });
-
-    menu.addEventListener("click", (e) => {
-      if(e.target.closest("a")) close();
-    });
-
-    document.addEventListener("click", (e) => {
-      if(e.target.closest("#mobileMenu") || e.target.closest("#burgerBtn")) return;
-      close();
-    });
-  })();
-  </script>
-
-  <!-- particles (dein code kann hier bleiben; wenn du willst, füge ich ihn wieder ein) -->
+  <!-- particles (falls du willst: hier wieder einfügen wie in products.html) -->
 </body>
 </html>
