@@ -506,15 +506,35 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
 }
 
 @media (max-width: 640px){
-  /* ✅ wie Products/Cart/Product: Nav weg auf Mobile */
-  .navCenter{ display:none; }
+  /* Header darf umbrechen */
+  .navRow{
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 0;
+  }
 
-  .productGrid{ grid-template-columns: 1fr; }
-  .reviewGrid{ grid-template-columns: 1fr; }
-  .footerBottom{ flex-direction:column; }
-  .brandText small{ display:none; }
   .brand{ min-width: 0; }
-  .navRight{ min-width: 0; }
+  .brandText small{ display:none; }
+
+  .navRight{
+    min-width: 0;
+    gap: 8px;
+  }
+
+  /* ✅ Nav sichtbar + horizontal scroll (kein Overlap) */
+  .navCenter{
+    order: 3;               /* kommt unter die erste Reihe */
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .navCenter::-webkit-scrollbar{ display:none; }
+  .pill{ white-space: nowrap; }
 }
 </style>
 </head>
