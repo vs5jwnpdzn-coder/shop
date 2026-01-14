@@ -588,9 +588,26 @@ footer{ margin-top: 10px; background: rgba(0,0,0,.76); border-top: 1px solid rgb
   .burgerBtn{ display:inline-flex; align-items:center; justify-content:center; }
 }
 
-/* Mobile Layout Fix wie products.html */
+/* ===== ✅ MOBILE FORMAT wie products.html ===== */
 @media (max-width: 640px){
+  /* Desktop Nav aus */
   .navCenter{ display:none; }
+
+  /* Grids wie Products: 1 Spalte */
+  .productGrid{ grid-template-columns: 1fr; }
+  .reviewGrid{ grid-template-columns: 1fr; }
+
+  /* BankCards wie Products: kleiner + weiter außen */
+  .bankCard{
+    width: 420px;
+    height: 270px;
+    opacity: .55;
+    filter: blur(.2px);
+  }
+  .cardGraphite{ left:-220px; top:140px; }
+  .cardSteel{ right:-220px; top:340px; }
+
+  /* Navbar Row Wrap wie Products */
   .navRow{
     flex-wrap: wrap;
     align-items: center;
